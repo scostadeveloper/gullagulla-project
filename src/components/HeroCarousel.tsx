@@ -98,7 +98,7 @@ const HeroCarousel: React.FC = () => {
         ))}
       </div>
 
-      {/* Navegação */}
+      
       <button 
         className="carousel-nav prev" 
         onClick={goToPrevious}
@@ -114,7 +114,7 @@ const HeroCarousel: React.FC = () => {
         <ChevronRight size={24} />
       </button>
 
-      {/* Indicadores */}
+      
       <div className="carousel-indicators">
         {slides.map((_, index) => (
           <button

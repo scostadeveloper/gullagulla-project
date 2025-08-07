@@ -43,7 +43,6 @@ function App() {
       <main>
         <Hero />
         
-        {/* Seção de Combos */}
         <section id="combos" className="py-20 bg-gradient-to-r from-orange-500 to-red-500 text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full"></div>
@@ -74,7 +73,6 @@ function App() {
           </div>
         </section>
 
-        {/* Seção do Menu */}
         <section id="menu" className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -112,7 +110,6 @@ function App() {
           </div>
         </section>
 
-        {/* Seção de Valores e Qualidade */}
         <section className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -149,10 +146,8 @@ function App() {
           </div>
         </section>
 
-        {/* Seção de Depoimentos */}
         <TestimonialsSection />
 
-        {/* Seção de Newsletter */}
         <NewsletterSection />
       </main>
       

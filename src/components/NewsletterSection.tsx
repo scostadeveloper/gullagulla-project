@@ -9,7 +9,6 @@ const NewsletterSection: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      // Aqui você pode integrar com um serviço de email marketing
       setIsSubscribed(true);
       setEmail('');
       setTimeout(() => setIsSubscribed(false), 5000);
@@ -18,7 +17,7 @@ const NewsletterSection: React.FC = () => {
 
   return (
     <section className="py-20 bg-gradient-to-r from-orange-500 to-red-500 text-white relative overflow-hidden">
-      {/* Background Pattern */}
+      
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full"></div>
         <div className="absolute bottom-20 right-20 w-24 h-24 bg-white rounded-full"></div>

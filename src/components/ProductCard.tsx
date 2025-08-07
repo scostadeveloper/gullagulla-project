@@ -38,12 +38,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
         />
         
-        {/* Category badge */}
+        
         <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
           {getCategoryEmoji(product.category)}
         </div>
 
-        {/* Price overlay */}
+        
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
           <div className="text-center">
             <span className="text-white text-2xl font-bold">
@@ -66,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
         </div>
 
-        {/* Rating display */}
+        
         <div className="flex items-center justify-center space-x-1">
           {[...Array(5)].map((_, i) => (
             <HiStar key={i} className="w-4 h-4 text-yellow-400" />
@@ -74,7 +74,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <span className="text-sm text-gray-500 ml-2">4.8/5</span>
         </div>
 
-        {/* Call to action button */}
+        
         <Button
           onClick={handleOrder}
           className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
@@ -83,7 +83,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           PEDIR AGORA
         </Button>
 
-        {/* Fresh indicator */}
+        
         <div className="text-center">
           <span className="text-xs text-green-600 font-medium bg-green-50 px-3 py-1 rounded-full">
             ✨ Feito fresco no dia

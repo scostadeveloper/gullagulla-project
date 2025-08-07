@@ -69,9 +69,8 @@ export const menuData: AppData = {
       icon: BebidaIcon
     }
   ],
-
+  
   products: [
-    // Salgados Tradicionais
     {
       id: 'trad1',
       name: 'Coxinha de Frango',
@@ -137,7 +136,6 @@ export const menuData: AppData = {
       category: 'salgados-tradicionais'
     },
 
-    // Salgados Especiais
     {
       id: 'esp1',
       name: 'Coxinha Gourmet',
@@ -203,7 +201,6 @@ export const menuData: AppData = {
       category: 'salgados-especiais'
     },
 
-    // Mini Churros
     {
       id: 'churros1',
       name: 'Mini Churros Doce de Leite',
@@ -253,7 +250,6 @@ export const menuData: AppData = {
       category: 'mini-churros'
     },
 
-    // Bebidas
     {
       id: 'beb1',
       name: 'Coca-Cola 2L',

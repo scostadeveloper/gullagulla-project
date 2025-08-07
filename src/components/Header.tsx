@@ -18,7 +18,6 @@ const Header: React.FC<HeaderProps> = ({ onOpenFAQ }) => {
     <header className="bg-gradient-to-r from-orange-500 to-red-500 shadow-xl sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 py-4">
-          {/* Logo */}
           <div className="flex-shrink-0">
             <h1 className="text-3xl font-bold text-yellow-300 tracking-tight">
               Gulla Gulla
@@ -28,7 +27,6 @@ const Header: React.FC<HeaderProps> = ({ onOpenFAQ }) => {
             </p>
           </div>
 
-          {/* Actions */}
           <div className="flex items-center space-x-4">
             <Button
               onClick={handleWhatsAppClick}

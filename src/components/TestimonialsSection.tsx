@@ -52,19 +52,19 @@ const TestimonialsSection: React.FC = () => {
               key={testimonial.id}
               className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-2 border border-orange-100"
             >
-              {/* Stars */}
+              
               <div className="flex items-center mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <HiStar key={i} className="w-5 h-5 text-yellow-400" />
                 ))}
               </div>
 
-              {/* Comment */}
+              
               <p className="text-gray-600 mb-6 leading-relaxed italic">
                 "{testimonial.comment}"
               </p>
 
-              {/* Author */}
+              
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-400 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
                   {testimonial.name.charAt(0)}
@@ -78,7 +78,7 @@ const TestimonialsSection: React.FC = () => {
           ))}
         </div>
 
-        {/* Call to action */}
+        
         <div className="text-center mt-12">
           <div className="bg-white rounded-2xl p-8 shadow-lg max-w-2xl mx-auto border border-orange-100">
             <h3 className="text-2xl font-bold text-gray-800 mb-4">

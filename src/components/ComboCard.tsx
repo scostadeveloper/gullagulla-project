@@ -14,19 +14,12 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
     window.open(generateWhatsAppURL(message), '_blank');
   };
 
-  const calculateSavings = () => {
-    if (combo.originalPrice) {
-      return ((combo.originalPrice - combo.price) / combo.originalPrice * 100).toFixed(0);
-    }
-    return '0';
-  };
-
   return (
     <Card className={`
       bg-white shadow-lg max-w-md mx-auto group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-3 border-0
       ${combo.highlight ? 'ring-4 ring-orange-500 ring-offset-4 scale-105' : ''}
     `}>
-      {/* Special badges */}
+            
       {combo.highlight && (
         <Badge 
           icon={HiFire}
@@ -52,23 +45,8 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
           className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
         />
         
-        {/* Price overlay */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-          <div className="text-center">
-            {combo.originalPrice && (
-              <span className="text-red-300 line-through text-lg mr-2">
-                {formatPrice(combo.originalPrice)}
-              </span>
-            )}
-            <span className="text-white text-3xl font-bold">
-              {formatPrice(combo.price)}
-            </span>
-            {combo.originalPrice && (
-              <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs ml-2 font-bold">
-                -{calculateSavings()}%
-              </span>
-            )}
-          </div>
+        <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-3 py-1 rounded-full font-bold text-sm shadow-lg transform rotate-12">
+          R$ {combo.price.toFixed(2).replace('.', ',')}
         </div>
       </div>
 
@@ -81,7 +59,7 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
           {combo.description}
         </p>
 
-        {/* Items included */}
+        
         <div className="bg-orange-50 rounded-lg p-4">
           <h6 className="text-sm font-bold mb-3 text-orange-800 flex items-center">
             <span className="mr-2">📦</span>
@@ -97,7 +75,7 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
           </div>
         </div>
 
-        {/* Call to action button */}
+        
         <Button
           onClick={handleOrderClick}
           className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
@@ -106,7 +84,7 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
           PEDIR AGORA VIA WHATSAPP
         </Button>
 
-        {/* Urgency message */}
+        
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded">
           <p className="text-yellow-800 text-sm font-medium flex items-center">
             <span className="mr-2">⏰</span>
