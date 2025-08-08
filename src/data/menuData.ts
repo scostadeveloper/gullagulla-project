@@ -4,46 +4,109 @@ import { SalgadoIcon, EstrelaIcon, BebidaIcon, ChurrosIcon } from '../components
 export const menuData: AppData = {
   combos: [
     {
-      id: 'combo1',
-      name: 'Combo Família Gulosa',
-      description: '15 salgados variados + 10 mini churros + 2 refrigerantes 2L',
-      image: '/assets/combo-familia.jpg',
-      originalPrice: 65.90,
-      price: 55.90,
-      items: ['15 salgados variados', '10 mini churros doce de leite', '2 refrigerantes 2L'],
-      highlight: true,
-      savings: '15% OFF'
+      id: '100-salgadinhos',
+      name: '100 Salgadinhos',
+      description: 'Coxinha, bolinha de queijo, kibe recheado, salsicha, queijo com alho, calabresa, queijo com presunto',
+      price: 38.99,
+      items: ['Coxinha', 'Bolinha de queijo', 'Kibe recheado', 'Salsicha', 'Queijo com alho', 'Calabresa', 'Queijo com presunto'],
+      image: '/images/salgadinhos.jpg',
     },
     {
-      id: 'combo2',
-      name: 'Combo Amigos',
-      description: '10 salgados + 6 mini churros + 4 refrigerantes lata',
-      image: '/assets/combo-dupla.jpg',
-      originalPrice: 42.90,
-      price: 36.90,
-      items: ['10 salgados variados', '6 mini churros', '4 refrigerantes lata'],
-      savings: '14% OFF'
+      id: '50-salgadinhos',
+      name: 'Porção 50 Salgadinhos',
+      description: 'Serve 2 pessoas. Coxinha, bolinha de queijo, kibe recheado, salsicha, queijo com alho, calabresa, queijo com presunto',
+      price: 24.49,
+      items: ['Coxinha', 'Bolinha de queijo', 'Kibe recheado', 'Salsicha', 'Queijo com alho', 'Calabresa', 'Queijo com presunto'],
+      image: '/images/salgadinhos.jpg',
     },
     {
-      id: 'combo3',
-      name: 'Combo Lanche Perfeito',
-      description: '5 salgados + 3 mini churros + 1 refrigerante',
-      image: '/assets/combo-individual.jpg',
-      originalPrice: 22.90,
-      price: 18.90,
-      items: ['5 salgados a sua escolha', '3 mini churros', '1 refrigerante'],
-      highlight: true,
-      savings: '17% OFF'
+      id: '50-mini-churros',
+      name: '50 Mini Churros (doce de leite)',
+      description: 'Deliciosos mini churros com recheio de doce de leite. Serve 1 pessoa.',
+      price: 24.99,
+      items: ['Mini churros doce de leite'],
+      image: '/images/churrinhos.jpg',
     },
     {
-      id: 'combo4',
-      name: 'Combo Mini Churros',
-      description: '15 mini churros + 1 refrigerante',
-      image: '/assets/combo-churros.jpg',
-      originalPrice: 18.90,
-      price: 15.90,
-      items: ['15 mini churros variados', '1 refrigerante'],
-      savings: '16% OFF'
+      id: '20-mini-pasteis',
+      name: 'Porção de 20 Mini Pastéis',
+      description: 'Queijo, frango, carne',
+      price: 19.99,
+      items: ['Queijo', 'Frango', 'Carne'],
+      image: '/images/pastelzinho.jpg',
+    },
+    {
+      id: '50-salgadinhos-10-pasteis',
+      name: '50 Salgadinhos + 10 Mini Pastéis',
+      description: 'Salgadinhos + pastéis sortidos',
+      price: 27.99,
+      items: ['Salgadinhos sortidos', 'Mini pastéis sortidos'],
+      image: '/images/combos/50-salgadinhos-10-pasteis.jpg',
+    },
+    {
+      id: '60-salgados-refri',
+      name: 'Combo 60 Salgados + Refrigerante 1.5L',
+      description: 'Coxinha, bolinha de queijo, kibe recheado, salsicha, queijo com alho, calabresa, queijo com presunto',
+      price: 31.99,
+      items: ['Coxinha', 'Bolinha de queijo', 'Kibe recheado', 'Salsicha', 'Queijo com alho', 'Calabresa', 'Queijo com presunto', 'Refrigerante 1.5L'],
+      image: '/images/combos/60-salgados-refri.jpg',
+    },
+    {
+      id: '100-salgados-refri',
+      name: 'Combo 100 Salgados + Refrigerante 1L',
+      description: 'Coxinha, bolinha de queijo, kibe, queijo com alho, salsicha, calabresa, queijo com presunto',
+      price: 42.99,
+      items: ['Coxinha', 'Bolinha de queijo', 'Kibe', 'Queijo com alho', 'Salsicha', 'Calabresa', 'Queijo com presunto', 'Refrigerante 1L'],
+      image: '/images/combos/100-salgados-refri.jpg',
+    },
+    {
+      id: '50-salgadinhos-15-pasteis-30-churros',
+      name: 'Combo 50 Salgadinhos + 15 Pastéis + 30 Churros',
+      description: 'O combo preferido de todos. Salgados mistos, mini pastel e churros doce de leite',
+      price: 41.99,
+      items: ['Salgados mistos', 'Mini pastel', 'Churros doce de leite'],
+      image: '/images/combos/50-salgadinhos-15-pasteis-30-churros.jpg',
+    },
+    {
+      id: '50-salgadinhos-20-pasteis-refri',
+      name: 'Combo 50 Salgadinhos + 20 Pastéis + Refrigerante 1L',
+      description: 'Combo do Dia. Salgado, refrigerante e pastéis',
+      price: 41.99,
+      items: ['Salgado', 'Refrigerante 1L', 'Pastéis'],
+      image: '/images/combos/50-salgadinhos-20-pasteis-refri.jpg',
+    },
+    {
+      id: '120-salgados-refri',
+      name: 'Combo 120 Salgados + Refrigerante 1.5L',
+      description: 'Coxinha, bolinha de queijo, kibe recheado, salsicha, queijo com alho, calabresa, queijo com presunto',
+      price: 44.99,
+      items: ['Coxinha', 'Bolinha de queijo', 'Kibe recheado', 'Salsicha', 'Queijo com alho', 'Calabresa', 'Queijo com presunto', 'Refrigerante 1.5L'],
+      image: '/images/combos/120-salgados-refri.jpg',
+    },
+    {
+      id: 'mega-100-salgados-20-pasteis-50-churros-coca2l',
+      name: 'Mega Combo 100 Salgados 20 Pastéis 50 Churros + Coca 2L',
+      description: '100 salgados, 20 pastéis mistos, 50 churros doce de leite',
+      price: 79.99,
+      items: ['100 salgados', '20 pastéis mistos', '50 churros doce de leite', 'Coca 2L'],
+      image: '/images/combos/mega-100-salgados-20-pasteis-50-churros-coca2l.jpg',
+    },
+  // Removido: Mega Combo 100 Salgadinhos 20 Pastéis 12 Assados + Coca 2L
+    {
+      id: '250-salgados-coca2l',
+      name: '250 Salgados + Coca 2L',
+      description: '250 salgados mistos + 1 coca 2l',
+      price: 99.99,
+      items: ['250 salgados mistos', 'Coca 2L'],
+      image: '/images/combos/250-salgados-coca2l.jpg',
+    },
+    {
+      id: '50-pasteis-refri',
+      name: '50 Pastéis + Refrigerante 1.5L',
+      description: '50 pastéis mistos + Antartica 1.5L',
+      price: 49.99,
+      items: ['50 pastéis mistos', 'Antarctica 1.5L'],
+      image: '/images/combos/50-pasteis-refri.jpg',
     }
   ],
 
@@ -70,251 +133,7 @@ export const menuData: AppData = {
     }
   ],
   
-  products: [
-    {
-      id: 'trad1',
-      name: 'Coxinha de Frango',
-      description: 'Coxinha tradicional com frango desfiado temperado na receita especial da casa',
-      image: '/images/coxinha.svg',
-      price: 4.50,
-      category: 'salgados-tradicionais'
-    },
-    {
-      id: 'trad2',
-      name: 'Pastel de Queijo',
-      description: 'Pastel crocante e dourado recheado com queijo cremoso derretido',
-      image: '/images/pastel-queijo.svg',
-      price: 5.00,
-      category: 'salgados-tradicionais'
-    },
-    {
-      id: 'trad3',
-      name: 'Risole de Presunto',
-      description: 'Risole dourado empanado com presunto, queijo e molho especial',
-      image: '/images/risole.svg',
-      price: 4.50,
-      category: 'salgados-tradicionais'
-    },
-    {
-      id: 'trad4',
-      name: 'Empada de Frango',
-      description: 'Empada caseira com massa folhada e frango temperado com temperos especiais',
-      image: '/assets/empada.jpg',
-      price: 5.50,
-      category: 'salgados-tradicionais'
-    },
-    {
-      id: 'trad5',
-      name: 'Quibe Frito',
-      description: 'Quibe tradicional crocante com carne moída temperada e trigo',
-      image: '/assets/quibe.jpg',
-      price: 4.00,
-      category: 'salgados-tradicionais'
-    },
-    {
-      id: 'trad6',
-      name: 'Esfirra de Carne',
-      description: 'Esfirra aberta com carne temperada, cebola e tomate',
-      image: '/assets/esfirra.jpg',
-      price: 4.50,
-      category: 'salgados-tradicionais'
-    },
-    {
-      id: 'trad7',
-      name: 'Pão de Açúcar',
-      description: 'Pão de açúcar macio recheado com queijo cremoso',
-      image: '/assets/pao-acucar.jpg',
-      price: 4.00,
-      category: 'salgados-tradicionais'
-    },
-    {
-      id: 'trad8',
-      name: 'Bolinha de Queijo',
-      description: 'Bolinha crocante por fora e cremosa por dentro, recheada com queijo',
-      image: '/assets/bolinha-queijo.jpg',
-      price: 4.50,
-      category: 'salgados-tradicionais'
-    },
-
-    {
-      id: 'esp1',
-      name: 'Coxinha Gourmet',
-      description: 'Coxinha especial com frango desfiado, cream cheese e ervas finas',
-      image: '/assets/coxinha-gourmet.jpg',
-      price: 6.50,
-      category: 'salgados-especiais'
-    },
-    {
-      id: 'esp2',
-      name: 'Pastel de Camarão',
-      description: 'Pastel premium recheado com camarão temperado e catupiry',
-      image: '/assets/pastel-camarao.jpg',
-      price: 8.00,
-      category: 'salgados-especiais'
-    },
-    {
-      id: 'esp3',
-      name: 'Esfirra de Carne Seca',
-      description: 'Esfirra especial com carne seca desfiada e queijo coalho',
-      image: '/assets/esfirra-carne-seca.jpg',
-      price: 7.00,
-      category: 'salgados-especiais'
-    },
-    {
-      id: 'esp4',
-      name: 'Mini Pizza Margherita',
-      description: 'Mini pizza artesanal com molho especial, mussarela e manjericão',
-      image: '/assets/mini-pizza.jpg',
-      price: 6.00,
-      category: 'salgados-especiais'
-    },
-    {
-      id: 'esp5',
-      name: 'Croissant de Frango',
-      description: 'Croissant folhado e crocante recheado com frango e requeijão',
-      image: '/assets/croissant.jpg',
-      price: 7.50,
-      category: 'salgados-especiais'
-    },
-    {
-      id: 'esp6',
-      name: 'Pastel de Carne com Queijo',
-      description: 'Pastel especial com carne temperada e queijo derretido',
-      image: '/assets/pastel-carne.jpg',
-      price: 6.50,
-      category: 'salgados-especiais'
-    },
-    {
-      id: 'esp7',
-      name: 'Enroladinho de Salsicha',
-      description: 'Massa folhada enrolada com salsicha e queijo, gratinado no forno',
-      image: '/assets/enroladinho.jpg',
-      price: 5.50,
-      category: 'salgados-especiais'
-    },
-    {
-      id: 'esp8',
-      name: 'Bolinha de Carne',
-      description: 'Bolinha crocante recheada com carne temperada e temperos especiais',
-      image: '/assets/bolinha-carne.jpg',
-      price: 5.50,
-      category: 'salgados-especiais'
-    },
-
-    {
-      id: 'churros1',
-      name: 'Mini Churros Doce de Leite',
-      description: 'Mini churros crocantes recheados com cremoso doce de leite',
-      image: '/assets/churros-doce-leite.jpg',
-      price: 1.50,
-      category: 'mini-churros'
-    },
-    {
-      id: 'churros2',
-      name: 'Mini Churros Chocolate',
-      description: 'Mini churros irresistíveis recheados com chocolate cremoso',
-      image: '/assets/churros-chocolate.jpg',
-      price: 1.50,
-      category: 'mini-churros'
-    },
-    {
-      id: 'churros3',
-      name: 'Mini Churros Nutella',
-      description: 'Mini churros premium recheados com Nutella original',
-      image: '/assets/churros-nutella.jpg',
-      price: 2.00,
-      category: 'mini-churros'
-    },
-    {
-      id: 'churros4',
-      name: 'Mini Churros Morango',
-      description: 'Mini churros especiais recheados com geleia de morango',
-      image: '/assets/churros-morango.jpg',
-      price: 1.75,
-      category: 'mini-churros'
-    },
-    {
-      id: 'churros5',
-      name: 'Mini Churros Beijinho',
-      description: 'Mini churros com sabor de coco e leite condensado',
-      image: '/assets/churros-beijinho.jpg',
-      price: 1.75,
-      category: 'mini-churros'
-    },
-    {
-      id: 'churros6',
-      name: 'Mix Mini Churros (6 unidades)',
-      description: 'Variado com doce de leite, chocolate e morango',
-      image: '/assets/churros-mix.jpg',
-      price: 9.50,
-      category: 'mini-churros'
-    },
-
-    {
-      id: 'beb1',
-      name: 'Coca-Cola 2L',
-      description: 'Refrigerante Coca-Cola 2 litros gelado',
-      image: '/assets/coca-2l.jpg',
-      price: 8.00,
-      category: 'bebidas'
-    },
-    {
-      id: 'beb2',
-      name: 'Guaraná Antarctica Lata',
-      description: 'Guaraná Antarctica 350ml gelado',
-      image: '/assets/guarana-lata.jpg',
-      price: 4.50,
-      category: 'bebidas'
-    },
-    {
-      id: 'beb3',
-      name: 'Suco de Laranja 500ml',
-      description: 'Suco natural de laranja 500ml fresquinho',
-      image: '/assets/suco-laranja.jpg',
-      price: 6.00,
-      category: 'bebidas'
-    },
-    {
-      id: 'beb4',
-      name: 'Água Mineral 500ml',
-      description: 'Água mineral Crystal sem gás 500ml',
-      image: '/assets/agua.jpg',
-      price: 2.50,
-      category: 'bebidas'
-    },
-    {
-      id: 'beb5',
-      name: 'Fanta Laranja 2L',
-      description: 'Refrigerante Fanta Laranja 2 litros gelado',
-      image: '/assets/fanta-2l.jpg',
-      price: 7.50,
-      category: 'bebidas'
-    },
-    {
-      id: 'beb6',
-      name: 'Sprite Lata',
-      description: 'Refrigerante Sprite 350ml gelado',
-      image: '/assets/sprite-lata.jpg',
-      price: 4.50,
-      category: 'bebidas'
-    },
-    {
-      id: 'beb7',
-      name: 'Suco de Uva 500ml',
-      description: 'Suco natural de uva 500ml',
-      image: '/assets/suco-uva.jpg',
-      price: 6.50,
-      category: 'bebidas'
-    },
-    {
-      id: 'beb8',
-      name: 'Refrigerante Lata (Variados)',
-      description: 'Escolha entre Coca, Fanta, Sprite ou Guaraná',
-      image: '/assets/refri-variados.jpg',
-      price: 4.50,
-      category: 'bebidas'
-    }
-  ],
+  products: [],
 
   whatsapp: {
     phoneNumber: '5521976958970',

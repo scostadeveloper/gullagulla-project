@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'flowbite-react';
-import { HiArrowRight, HiStar, HiShoppingBag, HiSparkles, HiPhone } from 'react-icons/hi2';
+import { HiStar, HiShoppingBag, HiSparkles } from 'react-icons/hi2';
 import { generateWhatsAppURL } from '../data/menuData';
 
 const Hero: React.FC = () => {
@@ -62,9 +62,7 @@ const Hero: React.FC = () => {
                 className="group relative overflow-hidden bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:from-green-600 hover:via-green-700 hover:to-green-800 text-white px-8 py-4 text-lg font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 transform border-0"
               >
                 <div className="flex items-center justify-center relative z-10">
-                  <HiPhone className="w-6 h-6 mr-3 group-hover:rotate-12 transition-transform duration-300" />
-                  PEDIR AGORA VIA WHATSAPP
-                  <HiArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                  PEDIR AGORA
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               </Button>
