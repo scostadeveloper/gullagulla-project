@@ -2,16 +2,17 @@ import React from 'react';
 import { Card, Button, Badge } from 'flowbite-react';
 import { HiFire, HiGift } from 'react-icons/hi2';
 import type { Combo } from '../types';
-import { formatPrice, generateWhatsAppURL } from '../data/menuData';
+import { useCart } from '../contexts/CartContext';
 
 interface ComboCardProps {
   combo: Combo;
 }
 
 const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
-  const handleOrderClick = () => {
-    const message = `Olá! Gostaria de pedir o combo "${combo.name}" - ${combo.description} por ${formatPrice(combo.price)}. Pode me ajudar? 😋`;
-    window.open(generateWhatsAppURL(message), '_blank');
+  const { addItem } = useCart();
+
+  const handleAddToCart = () => {
+    addItem(combo, 'combo');
   };
 
   return (
@@ -56,10 +57,10 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
         </div>
         <div className="w-full flex justify-center mt-auto">
           <Button
-            onClick={handleOrderClick}
+            onClick={handleAddToCart}
             className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
           >
-            PEDIR AGORA
+            ADICIONAR AO CARRINHO
           </Button>
         </div>
       </div>

@@ -8,6 +8,20 @@
   }
 }
 
+/* Custom animations */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-10px) rotate(2deg); 
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
 /* Custom gradient text utility */
 @layer utilities {
   .text-gradient {

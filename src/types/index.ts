@@ -19,6 +19,49 @@ export interface Combo {
   savings?: string;
 }
 
+export interface CartItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  quantity: number;
+  type: 'combo' | 'product';
+}
+
+export interface ShippingInfo {
+  cep: string;
+  address: string;
+  complement?: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+}
+
+export interface CustomerInfo {
+  name: string;
+  phone: string;
+  email?: string;
+  shipping: ShippingInfo;
+}
+
+export interface Order {
+  id: string;
+  items: CartItem[];
+  customer: CustomerInfo;
+  total: number;
+  shipping: number;
+  grandTotal: number;
+  paymentMethod: 'pix' | 'delivery' | 'credit' | 'debit' | 'pickup';
+  status: 'pending' | 'paid' | 'preparing' | 'delivered';
+  createdAt: string;
+  pixPayment?: {
+    qrCode: string;
+    copyPaste: string;
+    expiresAt: string;
+  };
+}
+
 export interface Category {
   id: string;
   name: string;

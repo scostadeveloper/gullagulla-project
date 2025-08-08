@@ -6,20 +6,26 @@ import TestimonialsSection from './components/TestimonialsSection';
 import NewsletterSection from './components/NewsletterSection';
 import FAQModal from './components/FAQModal';
 import WhatsAppFloat from './components/WhatsAppFloat';
+import CartSidebar from './components/CartSidebar';
 import Footer from './components/Footer';
+import { CartProvider } from './contexts/CartContext';
 import { menuData } from './data/menuData';
 
 
 function App() {
   const [isFAQOpen, setIsFAQOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const handleOpenFAQ = () => setIsFAQOpen(true);
   const handleCloseFAQ = () => setIsFAQOpen(false);
+  const handleOpenCart = () => setIsCartOpen(true);
+  const handleCloseCart = () => setIsCartOpen(false);
 
 
   return (
+    <CartProvider>
     <div className="min-h-screen bg-white">
-      <Header onOpenFAQ={handleOpenFAQ} />
+      <Header onOpenFAQ={handleOpenFAQ} onOpenCart={handleOpenCart} />
       <main>
         <Hero />
         {/* SESSÃO: Combos e Salgadinhos com Preço Especial */}
@@ -149,7 +155,9 @@ function App() {
         onClose={handleCloseFAQ}
         faqs={menuData.faqs}
       />
+      <CartSidebar isOpen={isCartOpen} onClose={handleCloseCart} />
     </div>
+    </CartProvider>
   );
 }
 

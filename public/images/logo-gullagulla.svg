@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f8f9fa"/>
+  
+  <!-- Eyes -->
+  <ellipse cx="460" cy="180" rx="45" ry="55" fill="white" stroke="#333" stroke-width="6"/>
+  <ellipse cx="580" cy="160" rx="50" ry="60" fill="white" stroke="#333" stroke-width="6"/>
+  
+  <!-- Eye pupils -->
+  <ellipse cx="450" cy="185" rx="12" ry="18" fill="#333"/>
+  <ellipse cx="570" cy="165" rx="15" ry="20" fill="#333"/>
+  
+  <!-- Eye highlights -->
+  <circle cx="455" cy="180" r="8" fill="#5dd3f0"/>
+  <circle cx="575" cy="160" r="10" fill="#5dd3f0"/>
+  
+  <!-- Smile curve -->
+  <path d="M 420 240 Q 520 320 620 260" stroke="#333" stroke-width="8" fill="none"/>
+  
+  <!-- Tongue -->
+  <ellipse cx="520" cy="280" rx="40" ry="80" fill="#e53e3e"/>
+  
+  <!-- GULLA text (top) -->
+  <text x="100" y="450" font-family="Arial Black, sans-serif" font-size="120" font-weight="900" fill="#f6ad55">G</text>
+  <text x="200" y="450" font-family="Arial Black, sans-serif" font-size="120" font-weight="900" fill="#f6ad55">U</text>
+  <text x="320" y="450" font-family="Arial Black, sans-serif" font-size="120" font-weight="900" fill="#f6ad55">L</text>
+  <text x="420" y="450" font-family="Arial Black, sans-serif" font-size="120" font-weight="900" fill="#f6ad55">L</text>
+  <text x="520" y="450" font-family="Arial Black, sans-serif" font-size="120" font-weight="900" fill="#f6ad55">A</text>
+  
+  <!-- GULLA text (bottom) -->
+  <text x="100" y="570" font-family="Arial Black, sans-serif" font-size="120" font-weight="900" fill="#f6ad55">G</text>
+  <text x="200" y="570" font-family="Arial Black, sans-serif" font-size="120" font-weight="900" fill="#f6ad55">U</text>
+  <text x="320" y="570" font-family="Arial Black, sans-serif" font-size="120" font-weight="900" fill="#f6ad55">L</text>
+  <text x="420" y="570" font-family="Arial Black, sans-serif" font-size="120" font-weight="900" fill="#f6ad55">L</text>
+  <text x="520" y="570" font-family="Arial Black, sans-serif" font-size="120" font-weight="900" fill="#f6ad55">A</text>
+</svg>
