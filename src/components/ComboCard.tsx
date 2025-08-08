@@ -15,8 +15,7 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
   };
 
   return (
-  <Card className={`bg-white shadow-lg max-w-xs w-full flex flex-col mx-auto group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-3 border-0 items-stretch min-h-[500px] ${combo.highlight ? 'ring-4 ring-orange-500 ring-offset-4 scale-105' : ''}`}> 
-            
+    <Card className="relative bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-2xl overflow-hidden h-full flex flex-col">
       {combo.highlight && (
         <Badge 
           icon={HiFire}
@@ -46,8 +45,8 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
         </div>
       </div>
 
-      <div className="flex flex-col flex-1 justify-between p-6 items-center">
-        <div className="w-full flex-1 flex flex-col justify-start">
+      <div className="flex flex-col h-full justify-between p-6 items-center">
+        <div className="w-full flex flex-col justify-start">
           <h5 className="text-2xl font-bold text-center text-gray-800 leading-tight mb-2">
             {combo.name}
           </h5>

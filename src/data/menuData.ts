@@ -41,7 +41,7 @@ export const menuData: AppData = {
       description: 'Salgadinhos + pastéis sortidos',
       price: 27.99,
       items: ['Salgadinhos sortidos', 'Mini pastéis sortidos'],
-      image: '/images/combos/50-salgadinhos-10-pasteis.jpg',
+  image: '/images/salgadinhos_e_pastelzinhos.jpg',
     },
     {
       id: '60-salgados-refri',
@@ -49,7 +49,7 @@ export const menuData: AppData = {
       description: 'Coxinha, bolinha de queijo, kibe recheado, salsicha, queijo com alho, calabresa, queijo com presunto',
       price: 31.99,
       items: ['Coxinha', 'Bolinha de queijo', 'Kibe recheado', 'Salsicha', 'Queijo com alho', 'Calabresa', 'Queijo com presunto', 'Refrigerante 1.5L'],
-      image: '/images/combos/60-salgados-refri.jpg',
+  image: '/images/salgadinhos_com_refrigerante.jpg',
     },
     {
       id: '100-salgados-refri',
@@ -57,7 +57,7 @@ export const menuData: AppData = {
       description: 'Coxinha, bolinha de queijo, kibe, queijo com alho, salsicha, calabresa, queijo com presunto',
       price: 42.99,
       items: ['Coxinha', 'Bolinha de queijo', 'Kibe', 'Queijo com alho', 'Salsicha', 'Calabresa', 'Queijo com presunto', 'Refrigerante 1L'],
-      image: '/images/combos/100-salgados-refri.jpg',
+  image: '/images/salgadinhos_refri_1litro.jpg',
     },
     {
       id: '50-salgadinhos-15-pasteis-30-churros',
@@ -65,7 +65,7 @@ export const menuData: AppData = {
       description: 'O combo preferido de todos. Salgados mistos, mini pastel e churros doce de leite',
       price: 41.99,
       items: ['Salgados mistos', 'Mini pastel', 'Churros doce de leite'],
-      image: '/images/combos/50-salgadinhos-15-pasteis-30-churros.jpg',
+  image: '/images/salgadinhos_pastelzinho_churrinhos.jpg',
     },
     {
       id: '50-salgadinhos-20-pasteis-refri',
@@ -73,7 +73,7 @@ export const menuData: AppData = {
       description: 'Combo do Dia. Salgado, refrigerante e pastéis',
       price: 41.99,
       items: ['Salgado', 'Refrigerante 1L', 'Pastéis'],
-      image: '/images/combos/50-salgadinhos-20-pasteis-refri.jpg',
+  image: '/images/salgadinhos_pastelzinho_refri_1litro.jpg',
     },
     {
       id: '120-salgados-refri',
@@ -81,7 +81,7 @@ export const menuData: AppData = {
       description: 'Coxinha, bolinha de queijo, kibe recheado, salsicha, queijo com alho, calabresa, queijo com presunto',
       price: 44.99,
       items: ['Coxinha', 'Bolinha de queijo', 'Kibe recheado', 'Salsicha', 'Queijo com alho', 'Calabresa', 'Queijo com presunto', 'Refrigerante 1.5L'],
-      image: '/images/combos/120-salgados-refri.jpg',
+  image: '/images/salgadinhos_com_refrigerante.jpg',
     },
     {
       id: 'mega-100-salgados-20-pasteis-50-churros-coca2l',
@@ -89,7 +89,7 @@ export const menuData: AppData = {
       description: '100 salgados, 20 pastéis mistos, 50 churros doce de leite',
       price: 79.99,
       items: ['100 salgados', '20 pastéis mistos', '50 churros doce de leite', 'Coca 2L'],
-      image: '/images/combos/mega-100-salgados-20-pasteis-50-churros-coca2l.jpg',
+  image: '/images/salgadinhos_pastelzinhos_churrinhos_coca_2litros.jpg',
     },
   // Removido: Mega Combo 100 Salgadinhos 20 Pastéis 12 Assados + Coca 2L
     {
@@ -98,7 +98,7 @@ export const menuData: AppData = {
       description: '250 salgados mistos + 1 coca 2l',
       price: 99.99,
       items: ['250 salgados mistos', 'Coca 2L'],
-      image: '/images/combos/250-salgados-coca2l.jpg',
+  image: '/images/salgadinhos_coca_2litros.jpg',
     },
     {
       id: '50-pasteis-refri',
@@ -106,7 +106,7 @@ export const menuData: AppData = {
       description: '50 pastéis mistos + Antartica 1.5L',
       price: 49.99,
       items: ['50 pastéis mistos', 'Antarctica 1.5L'],
-      image: '/images/combos/50-pasteis-refri.jpg',
+  image: '/images/muitos_pastelzinhos_refri_1litro_e_meio.jpg',
     }
   ],
 

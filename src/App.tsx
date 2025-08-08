@@ -1,112 +1,102 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ComboCard from './components/ComboCard';
-import CategoryTabs from './components/CategoryTabs';
-import ProductCard from './components/ProductCard';
 import TestimonialsSection from './components/TestimonialsSection';
 import NewsletterSection from './components/NewsletterSection';
 import FAQModal from './components/FAQModal';
 import WhatsAppFloat from './components/WhatsAppFloat';
 import Footer from './components/Footer';
 import { menuData } from './data/menuData';
-import type { Product } from './types';
+
 
 function App() {
-  const [activeCategory, setActiveCategory] = useState('salgados-tradicionais');
   const [isFAQOpen, setIsFAQOpen] = useState(false);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
-  useEffect(() => {
-    const products = menuData.products.filter(
-      product => product.category === activeCategory
-    );
-    setFilteredProducts(products);
-  }, [activeCategory]);
+  const handleOpenFAQ = () => setIsFAQOpen(true);
+  const handleCloseFAQ = () => setIsFAQOpen(false);
 
-  const handleCategoryChange = (categoryId: string) => {
-    setActiveCategory(categoryId);
-  };
-
-  const handleOpenFAQ = () => {
-    setIsFAQOpen(true);
-  };
-
-  const handleCloseFAQ = () => {
-    setIsFAQOpen(false);
-  };
 
   return (
     <div className="min-h-screen bg-white">
       <Header onOpenFAQ={handleOpenFAQ} />
-      
       <main>
         <Hero />
-        
+        {/* SESSÃO: Combos e Salgadinhos com Preço Especial */}
         <section id="combos" className="py-20 bg-gradient-to-r from-orange-500 to-red-500 text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full"></div>
             <div className="absolute bottom-20 right-20 w-24 h-24 bg-white rounded-full"></div>
             <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-white rounded-full"></div>
           </div>
-          
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-6 py-2 mb-6">
-                <span className="text-yellow-300 text-2xl mr-2">🔥</span>
-                <span className="font-semibold text-lg">COMBOS ESPECIAIS</span>
-              </div>
               <h2 className="text-5xl md:text-6xl font-bold mb-6">
-                Combos que <span className="text-yellow-300">Economizam</span>
+                Combos e Salgadinhos <span className="text-yellow-300">com Preço Especial</span>
               </h2>
               <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-                Monte seu combo perfeito e economize até R$ 8,00! 
-                Salgados frescos + mini churros irresistíveis
+                Escolha entre combos ou salgadinhos individuais e economize! Salgados frescos, mini churros irresistíveis e muito mais.
               </p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {menuData.combos.map((combo) => (
-                <ComboCard key={combo.id} combo={combo} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="menu" className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <div className="inline-flex items-center bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full px-6 py-2 mb-6">
-                <span className="font-semibold">FEITOS COM AMOR</span>
+            {/* SESSÃO: Salgadinhos / Mini-Churros */}
+            <div className="mb-10">
+              <h3 className="text-3xl font-bold mb-6 text-white text-center drop-shadow">Salgadinhos / Mini-Churros</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 auto-rows-fr">
+                {menuData.combos
+                  .filter((item) => {
+                    const name = item.name.toLowerCase();
+                    const items = (item.items || []).join(' ').toLowerCase();
+                    if (item.id === '50-mini-churros') return true;
+                    if (name.includes('+')) return false;
+                    const isSalgadinho =
+                      !name.includes('churros') &&
+                      !name.includes('pastel') &&
+                      !name.includes('refri') &&
+                      !name.includes('coca') &&
+                      !name.includes('bebida') &&
+                      !items.includes('churros') &&
+                      !items.includes('pastel') &&
+                      !items.includes('refri') &&
+                      !items.includes('coca') &&
+                      !items.includes('bebida');
+                    return isSalgadinho;
+                  })
+                  .sort((a, b) => a.price - b.price)
+                  .map((item) => (
+                    <ComboCard key={item.id} combo={item} />
+                  ))}
               </div>
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-800">
-                Nosso <span className="text-gradient">Cardápio</span>
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Salgados artesanais feitos frescos todos os dias e mini churros irresistíveis para adoçar seu dia
-              </p>
             </div>
-            
-            <CategoryTabs 
-              categories={menuData.categories.map(cat => cat.name)}
-              activeCategory={activeCategory}
-              onCategoryChange={handleCategoryChange}
-            />
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-16">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-            
-            {filteredProducts.length === 0 && (
-              <div className="text-center py-16">
-                <div className="text-6xl mb-4">😋</div>
-                <p className="text-xl text-gray-400">
-                  Produtos deliciosos estão chegando nesta categoria!
-                </p>
+            {/* SESSÃO: Combos */}
+            <div>
+              <h3 className="text-3xl font-bold mb-6 text-white text-center drop-shadow">Combos</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 auto-rows-fr">
+                {menuData.combos
+                  .filter((item) => {
+                    if (item.id === '50-salgadinhos-10-pasteis') return true;
+                    const name = item.name.toLowerCase();
+                    const items = (item.items || []).join(' ').toLowerCase();
+                    const isCombo =
+                      name.includes('+') ||
+                      name.includes('churros') ||
+                      name.includes('pastel') ||
+                      name.includes('refri') ||
+                      name.includes('coca') ||
+                      name.includes('bebida') ||
+                      items.includes('churros') ||
+                      items.includes('pastel') ||
+                      items.includes('refri') ||
+                      items.includes('coca') ||
+                      items.includes('bebida');
+                    if (item.id === '50-mini-churros') return false;
+                    return isCombo;
+                  })
+                  .sort((a, b) => a.price - b.price)
+                  .map((item) => (
+                    <ComboCard key={item.id} combo={item} />
+                  ))}
               </div>
-            )}
+            </div>
           </div>
         </section>
 
