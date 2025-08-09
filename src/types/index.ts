@@ -17,6 +17,8 @@ export interface Combo {
   items: string[];
   highlight?: boolean;
   savings?: string;
+  flavors?: string[]; // Sabores disponíveis para seleção
+  requiresFlavors?: boolean; // Se requer seleção de sabores
 }
 
 export interface CartItem {
@@ -27,6 +29,7 @@ export interface CartItem {
   image: string;
   quantity: number;
   type: 'combo' | 'product';
+  selectedFlavors?: string[]; // Sabores selecionados pelo usuário
 }
 
 export interface ShippingInfo {

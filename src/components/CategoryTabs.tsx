@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'flowbite-react';
-import { SalgadoIcon, DoceIcon, BebidaIcon } from './icons';
+import { SalgadoIcon, DoceIcon, BebidaIcon, ChurrosIcon } from './icons';
 
 interface CategoryTabsProps {
   categories: string[];
@@ -15,13 +15,16 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
 }) => {
   const getIcon = (category: string) => {
     switch (category.toLowerCase()) {
-      case 'especiais':
+      case 'salgadinhos':
       case 'salgados':
         return <SalgadoIcon />;
+      case 'churros':
       case 'doces':
-        return <DoceIcon />;
+        return <ChurrosIcon />;
       case 'bebidas':
         return <BebidaIcon />;
+      case 'combos':
+        return <DoceIcon />;
       default:
         return <SalgadoIcon />;
     }

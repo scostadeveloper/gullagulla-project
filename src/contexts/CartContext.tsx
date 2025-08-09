@@ -8,7 +8,7 @@ interface CartState {
 }
 
 interface CartContextType extends CartState {
-  addItem: (item: Combo | Product, type: 'combo' | 'product') => void;
+  addItem: (item: Combo | Product, type: 'combo' | 'product', selectedFlavors?: string[]) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -17,7 +17,7 @@ interface CartContextType extends CartState {
 }
 
 type CartAction =
-  | { type: 'ADD_ITEM'; payload: { item: Combo | Product; itemType: 'combo' | 'product' } }
+  | { type: 'ADD_ITEM'; payload: { item: Combo | Product; itemType: 'combo' | 'product'; selectedFlavors?: string[] } }
   | { type: 'REMOVE_ITEM'; payload: string }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' }
@@ -28,25 +28,32 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_ITEM': {
-      const { item, itemType } = action.payload;
-      const existingItem = state.items.find(cartItem => cartItem.id === item.id);
+      const { item, itemType, selectedFlavors } = action.payload;
+      
+      // Criar ID único baseado no item e sabores selecionados
+      const uniqueId = selectedFlavors && selectedFlavors.length > 0 
+        ? `${item.id}-${selectedFlavors.sort().join('-').toLowerCase().replace(/\s+/g, '')}`
+        : item.id;
+      
+      const existingItem = state.items.find(cartItem => cartItem.id === uniqueId);
       
       let newItems: CartItem[];
       if (existingItem) {
         newItems = state.items.map(cartItem =>
-          cartItem.id === item.id
+          cartItem.id === uniqueId
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
         );
       } else {
         const newCartItem: CartItem = {
-          id: item.id,
+          id: uniqueId,
           name: item.name,
           description: item.description,
           price: item.price,
           image: item.image,
           quantity: 1,
-          type: itemType
+          type: itemType,
+          selectedFlavors: selectedFlavors
         };
         newItems = [...state.items, newCartItem];
       }
@@ -121,8 +128,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('gullagulla-cart', JSON.stringify(state.items));
   }, [state.items]);
 
-  const addItem = (item: Combo | Product, type: 'combo' | 'product') => {
-    dispatch({ type: 'ADD_ITEM', payload: { item, itemType: type } });
+  const addItem = (item: Combo | Product, type: 'combo' | 'product', selectedFlavors?: string[]) => {
+    dispatch({ type: 'ADD_ITEM', payload: { item, itemType: type, selectedFlavors } });
   };
 
   const removeItem = (id: string) => {

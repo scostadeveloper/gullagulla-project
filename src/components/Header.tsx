@@ -22,13 +22,30 @@ const Header: React.FC<HeaderProps> = ({ onOpenCart }) => {
               className="h-12 w-auto"
             />
             <div>
-              <h1 className="text-3xl font-bold text-yellow-300 tracking-tight">
-                Gulla Gulla
+              <h1 className="text-2xl font-bold text-orange-400 tracking-tight">
+                <span style={{ fontFamily: "'Playwrite AU QLD', cursive" }}>Gulla Gulla</span>
               </h1>
               <p className="text-sm font-medium text-black">
-                Fábrica de Salgados & Bolos
+                Fábrica de Salgados
               </p>
             </div>
+          </div>
+
+          <div className="hidden md:flex items-center space-x-8">
+            <nav className="flex space-x-8">
+              <a 
+                href="#combos" 
+                className="text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200"
+              >
+                Combos
+              </a>
+              <a 
+                href="#localizacao" 
+                className="text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200"
+              >
+                Localização
+              </a>
+            </nav>
           </div>
 
           <div className="flex items-center space-x-4">

@@ -77,21 +77,6 @@ const TestimonialsSection: React.FC = () => {
             </div>
           ))}
         </div>
-
-        
-        <div className="text-center mt-12">
-          <div className="bg-white rounded-2xl p-8 shadow-lg max-w-2xl mx-auto border border-orange-100">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">
-              Quer fazer parte da nossa família? 🤗
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Faça seu primeiro pedido e descubra por que somos a escolha número 1 da região!
-            </p>
-            <button className="bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              FAZER MEU PRIMEIRO PEDIDO 🛒
-            </button>
-          </div>
-        </div>
       </div>
     </section>
   );

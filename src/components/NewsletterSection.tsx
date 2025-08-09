@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from 'flowbite-react';
-import { HiGift, HiEnvelope } from 'react-icons/hi2';
+import { HiEnvelope } from 'react-icons/hi2';
 
 const NewsletterSection: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -26,13 +26,8 @@ const NewsletterSection: React.FC = () => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <div className="inline-flex items-center bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-6 py-2 mb-6">
-          <HiGift className="w-5 h-5 mr-2" />
-          <span className="font-semibold">OFERTA ESPECIAL</span>
-        </div>
-
         <h2 className="text-4xl md:text-5xl font-bold mb-6">
-          Ganhe <span className="text-yellow-300">10% OFF</span> no seu primeiro pedido!
+          Fique por dentro das <span className="text-yellow-300">Novidades</span>!
         </h2>
         
         <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
@@ -57,7 +52,7 @@ const NewsletterSection: React.FC = () => {
                 type="submit"
                 className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
               >
-                QUERO 10% OFF!
+                CADASTRAR E-MAIL
               </Button>
             </div>
           </form>
@@ -66,7 +61,7 @@ const NewsletterSection: React.FC = () => {
             <div className="text-6xl mb-4">🎉</div>
             <h3 className="text-2xl font-bold mb-2">Parabéns!</h3>
             <p className="text-lg opacity-90">
-              Você está cadastrado! Verifique seu e-mail para receber seu cupom de 10% OFF.
+              Você está cadastrado! Agora você receberá nossas novidades e promoções.
             </p>
           </div>
         )}

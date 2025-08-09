@@ -1,12 +1,63 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from 'flowbite-react';
 import { HiStar } from 'react-icons/hi2';
-import { generateWhatsAppURL } from '../data/menuData';
 
 const Hero: React.FC = () => {
-  const handleWhatsAppClick = () => {
-    const message = 'Olá! Vi os salgados no site e gostaria de fazer um pedido! 🤤';
-    window.open(generateWhatsAppURL(message), '_blank');
+  // Carousel data - 5 featured items
+  const carouselItems = [
+    {
+      id: '20-mini-pasteis',
+      name: '20 Mini Pastéis',
+      price: 19.99,
+      image: '/images/pastelzinho.jpg'
+    },
+    {
+      id: '50-salgadinhos',
+      name: '50 Salgadinhos',
+      price: 24.49,
+      image: '/images/salgadinhos.jpg'
+    },
+    {
+      id: '50-mini-churros',
+      name: '50 Mini Churros',
+      price: 24.99,
+      image: '/images/churrinhos.jpg'
+    },
+    {
+      id: '60-salgados-refri',
+      name: 'Combo + Refri 1.5L',
+      price: 31.99,
+      image: '/images/salgadinhos_refri_1litro.jpg'
+    },
+    {
+      id: '100-salgadinhos',
+      name: '100 Salgadinhos',
+      price: 38.99,
+      image: '/images/salgadinhos.jpg'
+    }
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
+    }, 3000); // Muda a cada 3 segundos
+
+    return () => clearInterval(interval);
+  }, [carouselItems.length]);
+
+  const handleItemClick = (itemId: string) => {
+    const menuSection = document.getElementById('combos');
+    menuSection?.scrollIntoView({ behavior: 'smooth' });
+    
+    // Highlight the clicked item (you can add more specific targeting here)
+    setTimeout(() => {
+      const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+      if (itemElement) {
+        itemElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 500);
   };
 
   const scrollToMenu = () => {
@@ -43,10 +94,10 @@ const Hero: React.FC = () => {
             {/* Main Headline */}
             <div className="space-y-6">
               <h1 className="text-5xl lg:text-7xl font-black leading-tight">
-                <span className="text-gray-900">Salgados</span>
+                <span className="text-gray-900">Salgadinhos</span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-500">
-                  Artesanais
+                  feitos com amor
                 </span>
               </h1>
               
@@ -57,21 +108,14 @@ const Hero: React.FC = () => {
             
             {/* Value Proposition */}
             <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl p-6 shadow-xl">
-              <p className="text-xl font-bold mb-2">🔥 Combos especiais com ATÉ 17% OFF</p>
+              <p className="text-xl font-bold mb-2">🔥 Combos variados para sua festa ou evento!</p>
               <p className="text-lg opacity-90">
-                Entrega rápida no Rio de Janeiro
+                Entrega rápida no Bairro Urucânia e adjacências
               </p>
             </div>
             
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                size="xl"
-                onClick={handleWhatsAppClick}
-                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-10 py-5 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-0"
-              >
-                PEDIR AGORA
-              </Button>
               
               <Button
                 size="xl"
@@ -83,21 +127,49 @@ const Hero: React.FC = () => {
             </div>
           </div>
           
-          {/* Right Column - Visual */}
+          {/* Right Column - Clean Carousel */}
           <div className="relative">
-            <div className="relative group">
+            <div 
+              className="relative cursor-pointer group"
+              onClick={() => handleItemClick(carouselItems[currentSlide].id)}
+            >
               <img
-                src="/images/salgadinhos_e_pastelzinhos.jpg"
-                alt="Salgados artesanais deliciosos"
+                src={carouselItems[currentSlide].image}
+                alt={carouselItems[currentSlide].name}
                 className="w-full h-auto rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-700"
               />
               
-              {/* Price badge */}
-              <div className="absolute top-6 right-6 bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-2xl font-bold text-lg shadow-xl">
-                <div className="text-yellow-300 text-sm">A partir de</div>
-                <div className="text-xl">R$ 19,99</div>
+              {/* Simple price tag */}
+              <div className="absolute top-6 right-6 bg-orange-500 text-white px-4 py-2 rounded-xl font-bold text-lg shadow-xl">
+                <div className="text-yellow-100 text-sm">A partir de</div>
+                <div className="text-xl">R$ {carouselItems[currentSlide].price.toFixed(2).replace('.', ',')}</div>
+              </div>
+              
+              {/* Product name */}
+              <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm text-gray-800 px-4 py-2 rounded-xl font-semibold">
+                {carouselItems[currentSlide].name}
               </div>
             </div>
+            
+            {/* Clean navigation dots */}
+            <div className="flex justify-center mt-4 space-x-2">
+              {carouselItems.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentSlide 
+                      ? 'bg-orange-500 scale-110' 
+                      : 'bg-gray-300 hover:bg-gray-400'
+                  }`}
+                  onClick={() => setCurrentSlide(index)}
+                />
+              ))}
+            </div>
+            
+            {/* Action hint */}
+            <p className="text-center text-gray-600 mt-2 text-sm">
+              Clique na imagem para ver no cardápio
+            </p>
           </div>
         </div>
       </div>

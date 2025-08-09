@@ -1,8 +1,32 @@
 {
   "name": "gullagulla-react",
+  "version": "2.1.0",
+  "description": "Sistema completo de e-commerce para GullaGulla com carrinho, checkout, PIX e integração WhatsApp",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "keywords": [
+    "react",
+    "typescript",
+    "ecommerce",
+    "food-delivery",
+    "pix",
+    "whatsapp",
+    "tailwindcss",
+    "vite"
+  ],
+  "author": {
+    "name": "Digital Fusion",
+    "email": "contato@digitalfusion.com.br"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/digitalfusion/gullagulla-react.git"
+  },
+  "bugs": {
+    "url": "https://github.com/digitalfusion/gullagulla-react/issues"
+  },
+  "homepage": "https://gullagulla.com.br",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

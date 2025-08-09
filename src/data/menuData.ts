@@ -10,6 +10,8 @@ export const menuData: AppData = {
       price: 38.99,
       items: ['Coxinha', 'Bolinha de queijo', 'Kibe recheado', 'Salsicha', 'Queijo com alho', 'Calabresa', 'Queijo com presunto'],
       image: '/images/salgadinhos.jpg',
+      requiresFlavors: true,
+      flavors: ['Coxinha', 'Bolinha de queijo', 'Kibe recheado', 'Salsicha', 'Queijo com alho', 'Calabresa', 'Queijo com presunto', 'Variados'],
     },
     {
       id: '50-salgadinhos',
@@ -18,6 +20,8 @@ export const menuData: AppData = {
       price: 24.49,
       items: ['Coxinha', 'Bolinha de queijo', 'Kibe recheado', 'Salsicha', 'Queijo com alho', 'Calabresa', 'Queijo com presunto'],
       image: '/images/salgadinhos.jpg',
+      requiresFlavors: true,
+      flavors: ['Coxinha', 'Bolinha de queijo', 'Kibe recheado', 'Salsicha', 'Queijo com alho', 'Calabresa', 'Queijo com presunto', 'Variados'],
     },
     {
       id: '50-mini-churros',
@@ -34,6 +38,8 @@ export const menuData: AppData = {
       price: 19.99,
       items: ['Queijo', 'Frango', 'Carne'],
       image: '/images/pastelzinho.jpg',
+      requiresFlavors: true,
+      flavors: ['Queijo', 'Frango', 'Carne', 'Variados'],
     },
     {
       id: '50-salgadinhos-10-pasteis',
@@ -133,7 +139,32 @@ export const menuData: AppData = {
     }
   ],
   
-  products: [],
+  products: [
+    {
+      id: 'coca-cola-2l',
+      name: 'Coca-Cola 2 Litros',
+      description: 'Refrigerante Coca-Cola 2 litros gelado',
+      price: 13.00,
+      image: '/images/coca-cola-2litros.png',
+      category: 'Bebidas'
+    },
+    {
+      id: 'guarana-antartica-1l',
+      name: 'Guaraná Antarctica 1 Litro',
+      description: 'Refrigerante Guaraná Antarctica 1 litro gelado',
+      price: 8.00,
+      image: '/images/guarana-antartica-1litro.png',
+      category: 'Bebidas'
+    },
+    {
+      id: 'guarana-antartica-1-5l',
+      name: 'Guaraná Antarctica 1,5 Litros',
+      description: 'Refrigerante Guaraná Antarctica 1,5 litros gelado',
+      price: 9.00,
+      image: '/images/guarana-antartica-1-litro-e-meio.png',
+      category: 'Bebidas'
+    }
+  ],
 
   whatsapp: {
     phoneNumber: '5521976958970',
@@ -152,7 +183,7 @@ export const menuData: AppData = {
     },
     {
       question: 'Onde vocês estão localizados?',
-      answer: 'Rua Cilon Cunha Brum, 225 - Rio de Janeiro, RJ - CEP: 23573-400. Acesse nosso site: gullagulla.com.br'
+  answer: 'Rua Cilon Cunha Brum, 225 - Bairro Urucânia, RJ - CEP: 23573-400. Acesse nosso site: gullagulla.com.br'
     },
     {
       question: 'Como fazer um pedido?',
@@ -160,7 +191,7 @@ export const menuData: AppData = {
     },
     {
       question: 'Vocês fazem delivery?',
-      answer: 'Sim! Entregamos no Rio de Janeiro e região. Entre em contato pelo WhatsApp para verificar sua área de entrega e valores.'
+  answer: 'Sim! Entregamos em todo o Bairro Urucânia e adjacências. Entre em contato pelo WhatsApp para verificar sua área de entrega e valores.'
     },
     {
       question: 'Os salgados são feitos frescos?',

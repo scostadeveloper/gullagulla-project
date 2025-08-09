@@ -14,9 +14,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
   const [paymentMethod, setPaymentMethod] = useState<'pix' | 'delivery' | 'credit' | 'debit' | 'pickup'>('pix');
   const [loading, setLoading] = useState(false);
   const [copiedPix, setCopiedPix] = useState(false);
-  const [autoSendWhatsApp, setAutoSendWhatsApp] = useState(false);
   const [messageSent, setMessageSent] = useState(false);
-  const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>('delivery');
   
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     name: '',
@@ -34,20 +32,41 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 
   const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
 
-  // useEffect para envio automático do WhatsApp após 5 segundos no step 'success'
+  // Carregar dados salvos do localStorage quando o modal abrir
   useEffect(() => {
-    if (step === 'success' && currentOrder && autoSendWhatsApp && !messageSent) {
-      const timer = setTimeout(() => {
-        sendOrderToWhatsApp(currentOrder);
-        setAutoSendWhatsApp(false);
-        setMessageSent(true);
-      }, 5000);
-
-      return () => clearTimeout(timer);
+    if (isOpen) {
+      const savedCustomerInfo = localStorage.getItem('gullagulla-customer-info');
+      if (savedCustomerInfo) {
+        try {
+          const parsedInfo = JSON.parse(savedCustomerInfo);
+          setCustomerInfo(parsedInfo);
+        } catch (error) {
+          console.error('Erro ao carregar dados salvos:', error);
+        }
+      }
     }
-  }, [step, currentOrder, autoSendWhatsApp, messageSent]);
+  }, [isOpen]);
+
+  // Salvar dados no localStorage sempre que customerInfo mudar
+  useEffect(() => {
+    if (customerInfo.name || customerInfo.phone || customerInfo.shipping.address) {
+      localStorage.setItem('gullagulla-customer-info', JSON.stringify(customerInfo));
+    }
+  }, [customerInfo]);
 
   const formatPrice = (price: number) => `R$ ${price.toFixed(2).replace('.', ',')}`;
+
+  // Função para calcular desconto PIX
+  const getPixDiscount = () => {
+    return paymentMethod === 'pix' ? total * 0.05 : 0;
+  };
+
+  // Função para calcular total final com desconto PIX
+  const getFinalTotal = () => {
+    const baseTotal = total + getShippingCost();
+    const discount = getPixDiscount();
+    return baseTotal - discount;
+  };
 
   const handleCustomerInfoChange = (field: string, value: string) => {
     if (field.startsWith('shipping.')) {
@@ -63,9 +82,10 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 
   const generatePixPayment = () => {
     // Em produção, isso seria uma integração real com gateway de pagamento
+    const finalValue = getFinalTotal();
     const pixData = {
-      qrCode: `00020126330014BR.GOV.BCB.PIX011136995827000520400005303986540${getGrandTotal().toFixed(2)}5802BR5925GULLA GULLA SALGADOS6009SAO PAULO62070503***6304`,
-      copyPaste: `00020126330014BR.GOV.BCB.PIX011136995827000520400005303986540${getGrandTotal().toFixed(2)}5802BR5925GULLA GULLA SALGADOS6009SAO PAULO62070503***6304`,
+      qrCode: `00020126330014BR.GOV.BCB.PIX011136995827000520400005303986540${finalValue.toFixed(2)}5802BR5925GULLA GULLA SALGADOS6009SAO PAULO62070503***6304`,
+      copyPaste: `00020126330014BR.GOV.BCB.PIX011136995827000520400005303986540${finalValue.toFixed(2)}5802BR5925GULLA GULLA SALGADOS6009SAO PAULO62070503***6304`,
       expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString() // 30 minutos
     };
     
@@ -93,7 +113,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
         customer: customerInfo,
         total,
         shipping: getShippingCost(),
-        grandTotal: getGrandTotal(),
+        grandTotal: getFinalTotal(),
         paymentMethod,
         status: 'pending',
         createdAt: new Date().toISOString(),
@@ -110,89 +130,14 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
       if (paymentMethod === 'pix') {
         setStep('pix');
       } else {
-        // Ir para tela de sucesso e enviar WhatsApp automaticamente
+        // Ir para tela de sucesso
         setStep('success');
-        setAutoSendWhatsApp(true);
         clearCart();
       }
     } catch (error) {
       alert('Erro ao processar pedido. Tente novamente.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const sendOrderToWhatsApp = (order: Order) => {
-    let message = `🛒 *NOVO PEDIDO - ${order.id}*\n\n`;
-    message += `👤 *Cliente:* ${order.customer.name}\n`;
-    message += `📱 *Telefone:* ${order.customer.phone}\n\n`;
-    message += `📍 *Endereço:*\n${order.customer.shipping.address}\n`;
-    if (order.customer.shipping.complement) {
-      message += `${order.customer.shipping.complement}\n`;
-    }
-    message += `${order.customer.shipping.neighborhood}, ${order.customer.shipping.city} - ${order.customer.shipping.state}\n`;
-    message += `CEP: ${order.customer.shipping.cep}\n\n`;
-    message += `🍟 *Itens:*\n`;
-    
-    order.items.forEach(item => {
-      message += `• ${item.quantity}x ${item.name} - ${formatPrice(item.price * item.quantity)}\n`;
-    });
-    
-    message += `\n💰 *Resumo:*\n`;
-    message += `Subtotal: ${formatPrice(order.total)}\n`;
-    message += `Frete: ${order.shipping === 0 ? 'GRÁTIS' : formatPrice(order.shipping)}\n`;
-    message += `*Total: ${formatPrice(order.grandTotal)}*\n\n`;
-    message += `💳 *Pagamento:* ${order.paymentMethod === 'pix' ? 'PIX (Pago)' : 'Dinheiro na entrega'}\n\n`;
-    message += `⏰ Pedido feito em: ${new Date(order.createdAt).toLocaleString('pt-BR')}`;
-    
-    const whatsappUrl = `https://wa.me/5521976958970?text=${encodeURIComponent(message)}`;
-    
-    // Estratégia multi-camada para contornar bloqueadores de popup
-    try {
-      // Tentativa 1: window.open normal
-      const popup = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-      
-      // Verificar se foi bloqueado
-      if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-        throw new Error('Popup bloqueado');
-      }
-      
-      // Verificar novamente após um pequeno delay
-      setTimeout(() => {
-        if (popup.closed) {
-          throw new Error('Popup foi fechado pelo bloqueador');
-        }
-      }, 100);
-      
-    } catch (error) {
-      // Tentativa 2: Redirecionar na mesma aba
-      try {
-        window.location.href = whatsappUrl;
-      } catch (redirectError) {
-        // Tentativa 3: Criar link invisível e simular clique
-        const link = document.createElement('a');
-        link.href = whatsappUrl;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        
-        // Simular clique do usuário
-        const clickEvent = new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true,
-          view: window
-        });
-        
-        link.dispatchEvent(clickEvent);
-        document.body.removeChild(link);
-        
-        // Se ainda não funcionou, copiar para clipboard como fallback
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(whatsappUrl);
-          alert('Link do WhatsApp copiado! Cole no seu navegador para enviar o pedido.');
-        }
-      }
     }
   };
 
@@ -207,12 +152,20 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
   const handlePixPaymentComplete = () => {
     if (currentOrder) {
       setStep('success');
-      setAutoSendWhatsApp(true);
       clearCart();
     }
   };
 
   const resetModal = () => {
+    setStep('info');
+    setPaymentMethod('pix');
+    setCurrentOrder(null);
+    setCopiedPix(false);
+    setMessageSent(false);
+    onClose();
+  };
+
+  const clearAllData = () => {
     setStep('info');
     setPaymentMethod('pix');
     setCustomerInfo({
@@ -231,7 +184,8 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
     setCurrentOrder(null);
     setCopiedPix(false);
     setMessageSent(false);
-    setAutoSendWhatsApp(false);
+    // Remover dados salvos do localStorage
+    localStorage.removeItem('gullagulla-customer-info');
     onClose();
   };
 
@@ -246,7 +200,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                   {step === 'info' && 'Dados de Entrega'}
                   {step === 'payment' && 'Forma de Pagamento'}
                   {step === 'pix' && 'Pagamento PIX'}
-                  {step === 'success' && 'Pedido Confirmado!'}
+                  {step === 'success' && 'Pedido Gerado!'}
                 </h2>
                 <button 
                   onClick={resetModal}
@@ -370,9 +324,15 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                   <span>Frete:</span>
                   <span>{getShippingCost() === 0 ? 'GRÁTIS' : formatPrice(getShippingCost())}</span>
                 </div>
+                {paymentMethod === 'pix' && getPixDiscount() > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Desconto PIX (5%):</span>
+                    <span>-{formatPrice(getPixDiscount())}</span>
+                  </div>
+                )}
                 <div className="flex justify-between font-bold text-lg border-t pt-1">
                   <span>Total:</span>
-                  <span className="text-orange-600">{formatPrice(getGrandTotal())}</span>
+                  <span className="text-orange-600">{formatPrice(getFinalTotal())}</span>
                 </div>
               </div>
             </div>
@@ -381,28 +341,52 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
               <h3 className="text-sm font-medium text-gray-700">Forma de Pagamento</h3>
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    id="pix"
-                    name="payment"
-                    value="pix"
-                    checked={paymentMethod === 'pix'}
-                    onChange={() => setPaymentMethod('pix')}
-                    className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 focus:ring-orange-500 focus:ring-2"
+                <input
+                  type="radio"
+                  id="pix"
+                  name="payment"
+                  value="pix"
+                  checked={paymentMethod === 'pix'}
+                  onChange={() => setPaymentMethod('pix')}
+                  style={{ accentColor: '#ff6600' }}
                   />
                   <label htmlFor="pix" className="text-sm font-medium text-gray-700">PIX (5% de desconto)</label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    id="delivery"
-                    name="payment"
-                    value="delivery"
-                    checked={paymentMethod === 'delivery'}
-                    onChange={() => setPaymentMethod('delivery')}
-                    className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 focus:ring-orange-500 focus:ring-2"
+                <input
+                  type="radio"
+                  id="delivery"
+                  name="payment"
+                  value="delivery"
+                  checked={paymentMethod === 'delivery'}
+                  onChange={() => setPaymentMethod('delivery')}
+                  style={{ accentColor: '#ff6600' }}
                   />
                   <label htmlFor="delivery" className="text-sm font-medium text-gray-700">Dinheiro na entrega</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  id="credit"
+                  name="payment"
+                  value="credit"
+                  checked={paymentMethod === 'credit'}
+                  onChange={() => setPaymentMethod('credit')}
+                  style={{ accentColor: '#ff6600' }}
+                  />
+                  <label htmlFor="credit" className="text-sm font-medium text-gray-700">Cartão de Crédito/Débito na entrega</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  id="pickup"
+                  name="payment"
+                  value="pickup"
+                  checked={paymentMethod === 'pickup'}
+                  onChange={() => setPaymentMethod('pickup')}
+                  style={{ accentColor: '#ff6600' }}
+                  />
+                  <label htmlFor="pickup" className="text-sm font-medium text-gray-700">Retirar na loja</label>
                 </div>
               </div>
             </div>
@@ -454,39 +438,60 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
               <HiCheck className="w-8 h-8 text-green-600" />
             </div>
             <h3 className="text-lg font-semibold text-green-600">
-              Pedido Confirmado!
+              Pedido gerado!
             </h3>
             <p className="text-gray-600">
-              Seu pedido foi enviado e em breve entraremos em contato para confirmar a entrega.<br />
-              <span className="font-semibold text-orange-600">Por favor, envie o comprovante do pagamento PIX pelo WhatsApp para agilizar a confirmação!</span>
+              Para que possamos receber seu pedido, é necessário enviar a mensagem de confirmação e o comprovante de pagamento pelo WhatsApp.<br />
+              <span className="font-semibold text-orange-600">Clique no botão abaixo para enviar seu pedido e comprovante!</span>
             </p>
             <p className="text-sm text-gray-500">
               Número do pedido: {currentOrder?.id}
             </p>
-            
-            {/* Botão de fallback para WhatsApp */}
             <div className="pt-4">
-              <button
-                onClick={() => {
-                  if (currentOrder && !messageSent) {
-                    sendOrderToWhatsApp(currentOrder);
-                    setMessageSent(true);
+              {currentOrder && (
+                <a
+                  href={`https://wa.me/5521976958970?text=${encodeURIComponent(
+                    `🛒 *NOVO PEDIDO - ${currentOrder.id}*\n\n` +
+                    `👤 *Cliente:* ${currentOrder.customer.name}\n` +
+                    `📱 *Telefone:* ${currentOrder.customer.phone}\n\n` +
+                    `📍 *Endereço:*\n${currentOrder.customer.shipping.address}\n` +
+                    (currentOrder.customer.shipping.complement ? `${currentOrder.customer.shipping.complement}\n` : '') +
+                    `${currentOrder.customer.shipping.neighborhood}, ${currentOrder.customer.shipping.city} - ${currentOrder.customer.shipping.state}\n` +
+                    `CEP: ${currentOrder.customer.shipping.cep}\n\n` +
+                    `🍟 *Itens:*\n` +
+                    currentOrder.items.map(item => {
+                      const flavorsText = item.selectedFlavors && item.selectedFlavors.length > 0 
+                        ? ` (${item.selectedFlavors.join(', ')})` 
+                        : '';
+                      return `• ${item.quantity}x ${item.name}${flavorsText} - R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}`;
+                    }).join('\n') +
+                    `\n\n💰 *Resumo:*\n` +
+                    `Subtotal: R$ ${currentOrder.total.toFixed(2).replace('.', ',')}\n` +
+                    `Frete: ${currentOrder.shipping === 0 ? 'GRÁTIS' : `R$ ${currentOrder.shipping.toFixed(2).replace('.', ',')}`}\n` +
+                    `*Total: R$ ${currentOrder.grandTotal.toFixed(2).replace('.', ',')}*\n\n` +
+                    `💳 *Pagamento:* ${currentOrder.paymentMethod === 'pix' ? 'PIX (Pago)' : 'Dinheiro na entrega'}\n\n` +
+                    `⏰ Pedido feito em: ${new Date(currentOrder.createdAt).toLocaleString('pt-BR')}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={
+                    (messageSent
+                      ? 'bg-gray-400 cursor-not-allowed pointer-events-none'
+                      : 'bg-green-500 hover:bg-green-600') +
+                    ' text-white px-6 py-2 rounded-md transition-colors duration-200 font-medium flex items-center justify-center mx-auto gap-2'
                   }
-                }}
-                disabled={messageSent}
-                className={`${
-                  messageSent 
-                    ? 'bg-gray-400 cursor-not-allowed' 
-                    : 'bg-green-500 hover:bg-green-600'
-                } text-white px-6 py-2 rounded-md transition-colors duration-200 font-medium flex items-center justify-center mx-auto gap-2`}
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.087"/>
-                </svg>
-                {messageSent ? 'Mensagem Enviada' : 'Abrir WhatsApp Manualmente'}
-              </button>
+                  onClick={() => {
+                    if (!messageSent) setMessageSent(true);
+                  }}
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.087"/>
+                  </svg>
+                  {messageSent ? 'Mensagem Enviada' : 'Enviar pedido e comprovante'}
+                </a>
+              )}
               <p className="text-xs text-gray-500 mt-2">
-                Clique aqui se o WhatsApp não abriu automaticamente
+                Clique no botão acima para enviar seu pedido pelo WhatsApp
               </p>
             </div>
           </div>
@@ -539,7 +544,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
           
           {step === 'success' && (
             <button 
-              onClick={resetModal}
+              onClick={clearAllData}
               className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md transition-colors duration-200 font-medium"
             >
               Fechar

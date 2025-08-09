@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Button, Badge } from 'flowbite-react';
 import { HiFire, HiGift } from 'react-icons/hi2';
 import type { Combo } from '../types';
 import { useCart } from '../contexts/CartContext';
+import FlavorSelectionModal from './FlavorSelectionModal';
 
 interface ComboCardProps {
   combo: Combo;
@@ -10,12 +11,22 @@ interface ComboCardProps {
 
 const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
   const { addItem } = useCart();
+  const [isFlavorModalOpen, setIsFlavorModalOpen] = useState(false);
 
   const handleAddToCart = () => {
-    addItem(combo, 'combo');
+    if (combo.requiresFlavors && combo.flavors) {
+      setIsFlavorModalOpen(true);
+    } else {
+      addItem(combo, 'combo');
+    }
+  };
+
+  const handleFlavorConfirm = (selectedFlavors: string[]) => {
+    addItem(combo, 'combo', selectedFlavors);
   };
 
   return (
+    <>
     <Card className="relative bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 rounded-2xl overflow-hidden h-full flex flex-col">
       {combo.highlight && (
         <Badge 
@@ -58,13 +69,21 @@ const ComboCard: React.FC<ComboCardProps> = ({ combo }) => {
         <div className="w-full flex justify-center mt-auto">
           <Button
             onClick={handleAddToCart}
-            className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+            className="w-full h-13 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 px-3 text-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
           >
             ADICIONAR AO CARRINHO
           </Button>
         </div>
       </div>
     </Card>
+    
+    <FlavorSelectionModal
+      isOpen={isFlavorModalOpen}
+      onClose={() => setIsFlavorModalOpen(false)}
+      combo={combo}
+      onConfirm={handleFlavorConfirm}
+    />
+    </>
   );
 };
 

@@ -2,8 +2,10 @@ import { useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ComboCard from './components/ComboCard';
+import ProductCard from './components/ProductCard';
+import CategoryTabs from './components/CategoryTabs';
 import TestimonialsSection from './components/TestimonialsSection';
-import NewsletterSection from './components/NewsletterSection';
+import StoreMap from './components/StoreMap';
 import FAQModal from './components/FAQModal';
 import WhatsAppFloat from './components/WhatsAppFloat';
 import CartSidebar from './components/CartSidebar';
@@ -15,11 +17,90 @@ import { menuData } from './data/menuData';
 function App() {
   const [isFAQOpen, setIsFAQOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('Todos');
 
   const handleOpenFAQ = () => setIsFAQOpen(true);
   const handleCloseFAQ = () => setIsFAQOpen(false);
   const handleOpenCart = () => setIsCartOpen(true);
   const handleCloseCart = () => setIsCartOpen(false);
+
+  const categories = ['Todos', 'Salgadinhos', 'Churros', 'Combos', 'Bebidas'];
+
+  // Função para filtrar salgadinhos
+  const getSalgadinhos = () => {
+    return menuData.combos.filter((item) => {
+      const name = item.name.toLowerCase();
+      const items = (item.items || []).join(' ').toLowerCase();
+      if (item.id === '50-mini-churros') return false;
+      const isSalgadinho =
+        !name.includes('+') &&
+        !name.includes('churros') &&
+        !name.includes('pastel') &&
+        !name.includes('refri') &&
+        !name.includes('coca') &&
+        !name.includes('bebida') &&
+        !items.includes('churros') &&
+        !items.includes('pastel') &&
+        !items.includes('refri') &&
+        !items.includes('coca') &&
+        !items.includes('bebida');
+      return isSalgadinho;
+    });
+  };
+
+  // Função para filtrar churros
+  const getChurros = () => {
+    return menuData.combos.filter((item) => item.id === '50-mini-churros');
+  };
+
+  // Função para filtrar combos
+  const getCombos = () => {
+    return menuData.combos.filter((item) => {
+      if (item.id === '50-salgadinhos-10-pasteis') return true;
+      const name = item.name.toLowerCase();
+      const items = (item.items || []).join(' ').toLowerCase();
+      const isCombo =
+        name.includes('+') ||
+        name.includes('churros') ||
+        name.includes('pastel') ||
+        name.includes('refri') ||
+        name.includes('coca') ||
+        name.includes('bebida') ||
+        items.includes('churros') ||
+        items.includes('pastel') ||
+        items.includes('refri') ||
+        items.includes('coca') ||
+        items.includes('bebida');
+      if (item.id === '50-mini-churros') return false;
+      return isCombo;
+    });
+  };
+
+  // Função para filtrar bebidas
+  const getBebidas = () => {
+    return menuData.products.filter((product) => product.category === 'Bebidas');
+  };
+
+  // Função para obter itens filtrados
+  const getFilteredItems = () => {
+    switch (activeCategory) {
+      case 'Salgadinhos':
+        return { combos: getSalgadinhos(), products: [] };
+      case 'Churros':
+        return { combos: getChurros(), products: [] };
+      case 'Combos':
+        return { combos: getCombos(), products: [] };
+      case 'Bebidas':
+        return { combos: [], products: getBebidas() };
+      default: // 'Todos'
+        return { 
+          combos: [...getSalgadinhos(), ...getChurros(), ...getCombos()], 
+          products: getBebidas() 
+        };
+    }
+  };
+
+  const filteredItems = getFilteredItems();
 
 
   return (
@@ -28,7 +109,7 @@ function App() {
       <Header onOpenFAQ={handleOpenFAQ} onOpenCart={handleOpenCart} />
       <main>
         <Hero />
-        {/* SESSÃO: Combos e Salgadinhos com Preço Especial */}
+        {/* SESSÃO: Cardápio com Filtros */}
         <section id="combos" className="py-20 bg-gradient-to-r from-orange-500 to-red-500 text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full"></div>
@@ -38,70 +119,34 @@ function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center mb-16">
               <h2 className="text-5xl md:text-6xl font-bold mb-6">
-                Combos e Salgadinhos <span className="text-yellow-300">com Preço Especial</span>
+                Nosso <span className="text-yellow-300">Cardápio</span>
               </h2>
               <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-                Escolha entre combos ou salgadinhos individuais e economize! Salgados frescos, mini churros irresistíveis e muito mais.
+                Escolha entre combos, salgadinhos individuais, churros e bebidas! Salgados frescos e muito mais.
               </p>
             </div>
-            {/* SESSÃO: Salgadinhos / Mini-Churros */}
+
+            {/* Filtros de Categoria */}
             <div className="mb-10">
-              <h3 className="text-3xl font-bold mb-6 text-white text-center drop-shadow">Salgadinhos / Mini-Churros</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 auto-rows-fr">
-                {menuData.combos
-                  .filter((item) => {
-                    const name = item.name.toLowerCase();
-                    const items = (item.items || []).join(' ').toLowerCase();
-                    if (item.id === '50-mini-churros') return true;
-                    if (name.includes('+')) return false;
-                    const isSalgadinho =
-                      !name.includes('churros') &&
-                      !name.includes('pastel') &&
-                      !name.includes('refri') &&
-                      !name.includes('coca') &&
-                      !name.includes('bebida') &&
-                      !items.includes('churros') &&
-                      !items.includes('pastel') &&
-                      !items.includes('refri') &&
-                      !items.includes('coca') &&
-                      !items.includes('bebida');
-                    return isSalgadinho;
-                  })
-                  .sort((a, b) => a.price - b.price)
-                  .map((item) => (
-                    <ComboCard key={item.id} combo={item} />
-                  ))}
-              </div>
+              <CategoryTabs
+                categories={categories}
+                activeCategory={activeCategory}
+                onCategoryChange={setActiveCategory}
+              />
             </div>
-            {/* SESSÃO: Combos */}
-            <div>
-              <h3 className="text-3xl font-bold mb-6 text-white text-center drop-shadow">Combos</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 auto-rows-fr">
-                {menuData.combos
-                  .filter((item) => {
-                    if (item.id === '50-salgadinhos-10-pasteis') return true;
-                    const name = item.name.toLowerCase();
-                    const items = (item.items || []).join(' ').toLowerCase();
-                    const isCombo =
-                      name.includes('+') ||
-                      name.includes('churros') ||
-                      name.includes('pastel') ||
-                      name.includes('refri') ||
-                      name.includes('coca') ||
-                      name.includes('bebida') ||
-                      items.includes('churros') ||
-                      items.includes('pastel') ||
-                      items.includes('refri') ||
-                      items.includes('coca') ||
-                      items.includes('bebida');
-                    if (item.id === '50-mini-churros') return false;
-                    return isCombo;
-                  })
-                  .sort((a, b) => a.price - b.price)
-                  .map((item) => (
-                    <ComboCard key={item.id} combo={item} />
-                  ))}
-              </div>
+
+            {/* Grid de Itens Filtrados */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 auto-rows-fr">
+              {filteredItems.combos
+                .sort((a, b) => a.price - b.price)
+                .map((item) => (
+                  <ComboCard key={item.id} combo={item} />
+                ))}
+              {filteredItems.products
+                .sort((a, b) => a.price - b.price)
+                .map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
             </div>
           </div>
         </section>
@@ -136,7 +181,7 @@ function App() {
               <div className="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div className="text-5xl mb-4">🚚</div>
                 <h3 className="text-xl font-bold text-gray-800 mb-3">Entrega Rápida</h3>
-                <p className="text-gray-600">Delivery ágil e cuidadoso para você receber seus salgados quentinhos</p>
+                <p className="text-gray-600">Entregamos em todo o Bairro Urucânia e adjacências</p>
               </div>
             </div>
           </div>
@@ -144,7 +189,23 @@ function App() {
 
         <TestimonialsSection />
 
-        <NewsletterSection />
+        {/* SESSÃO: Localização da Loja */}
+        <section id="localizacao" className="py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                Venha nos <span className="text-orange-600">Visitar</span>
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Atendemos e entregamos em todo o Bairro Urucânia e adjacências, com os melhores salgados e mini churros da região.
+              </p>
+            </div>
+            
+            <div className="max-w-4xl mx-auto">
+              <StoreMap />
+            </div>
+          </div>
+        </section>
       </main>
       
       <Footer />
