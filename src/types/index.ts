@@ -32,6 +32,13 @@ export interface CartItem {
   selectedFlavors?: string[]; // Sabores selecionados pelo usuário
 }
 
+export interface FlavorQuantity {
+  flavor: string;
+  category: string;
+  quantity: number;
+  maxQuantity: number;
+}
+
 export interface ShippingInfo {
   cep: string;
   address: string;

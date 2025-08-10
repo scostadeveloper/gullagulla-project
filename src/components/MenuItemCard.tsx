@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { HiFire, HiGift } from 'react-icons/hi2';
-import type { Product, Combo } from '../types';
+import type { Product, Combo, FlavorQuantity } from '../types';
 import { formatPrice } from '../data/menuData';
 import { useCart } from '../contexts/CartContext';
 import FlavorSelectionModal from './FlavorSelectionModal';
@@ -26,9 +26,13 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, type }) => {
     }
   };
 
-  const handleFlavorConfirm = (selectedFlavors: string[]) => {
+  const handleFlavorConfirm = (selectedFlavors: FlavorQuantity[]) => {
     if (combo) {
-      addItem(combo, 'combo', selectedFlavors);
+      // Convert FlavorQuantity[] to string[] format for cart
+      const flavorStrings = selectedFlavors.map(f => 
+        `${f.quantity}x ${f.flavor}`
+      );
+      addItem(combo, 'combo', flavorStrings);
     }
   };
 
