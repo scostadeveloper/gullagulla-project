@@ -1,5 +1,4 @@
 import type { AppData } from '../types';
-import { SalgadoIcon, EstrelaIcon, BebidaIcon, ChurrosIcon } from '../components/icons';
 
 export const menuData: AppData = {
   combos: [
@@ -119,23 +118,19 @@ export const menuData: AppData = {
   categories: [
     {
       id: 'salgados-tradicionais',
-      name: 'Salgados Tradicionais',
-      icon: SalgadoIcon
+      name: 'Salgados Tradicionais'
     },
     {
       id: 'salgados-especiais',
-      name: 'Salgados Especiais',
-      icon: EstrelaIcon
+      name: 'Salgados Especiais'
     },
     {
       id: 'mini-churros',
-      name: 'Mini Churros',
-      icon: ChurrosIcon
+      name: 'Mini Churros'
     },
     {
       id: 'bebidas',
-      name: 'Bebidas',
-      icon: BebidaIcon
+      name: 'Bebidas'
     }
   ],
   

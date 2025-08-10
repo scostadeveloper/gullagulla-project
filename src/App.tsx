@@ -106,7 +106,7 @@ function App() {
   return (
     <CartProvider>
     <div className="min-h-screen bg-white">
-      <Header onOpenFAQ={handleOpenFAQ} onOpenCart={handleOpenCart} />
+      <Header onOpenCart={handleOpenCart} />
       <main>
         <Hero />
         {/* SESSÃO: Cardápio com Filtros */}
@@ -136,7 +136,7 @@ function App() {
             </div>
 
             {/* Grid de Itens Filtrados */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 auto-rows-fr">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 auto-rows-fr">
               {filteredItems.combos
                 .sort((a, b) => a.price - b.price)
                 .map((item) => (
@@ -151,7 +151,7 @@ function App() {
           </div>
         </section>
 
-        <section className="py-20 bg-gradient-to-br from-gray-50 to-orange-50">
+        <section className="hidden sm:block py-20 bg-gradient-to-br from-gray-50 to-orange-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <div className="inline-flex items-center bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full px-6 py-2 mb-6">
@@ -165,7 +165,7 @@ function App() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
               <div className="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div className="text-5xl mb-4">🥇</div>
                 <h3 className="text-xl font-bold text-gray-800 mb-3">Qualidade Premium</h3>
@@ -208,7 +208,7 @@ function App() {
         </section>
       </main>
       
-      <Footer />
+      <Footer onOpenFAQ={handleOpenFAQ} />
       <WhatsAppFloat />
       
       <FAQModal 

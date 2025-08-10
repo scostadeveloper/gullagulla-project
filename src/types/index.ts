@@ -68,7 +68,6 @@ export interface Order {
 export interface Category {
   id: string;
   name: string;
-  icon: React.ComponentType<{ size?: number; className?: string; color?: string }>;
 }
 
 export interface WhatsAppConfig {

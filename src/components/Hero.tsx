@@ -69,31 +69,31 @@ const Hero: React.FC = () => {
     <section className="relative min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-white overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-r from-orange-200/30 to-red-200/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-r from-yellow-200/20 to-orange-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute top-10 sm:top-20 left-10 sm:left-20 w-32 sm:w-48 lg:w-64 h-32 sm:h-48 lg:h-64 bg-gradient-to-r from-orange-200/30 to-red-200/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 sm:bottom-20 right-10 sm:right-20 w-40 sm:w-60 lg:w-80 h-40 sm:h-60 lg:h-80 bg-gradient-to-r from-yellow-200/20 to-orange-200/30 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-20">
-        <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 relative z-10 pt-16 sm:pt-20">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[80vh]">
           
           {/* Left Column - Content */}
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
             
-            {/* Social Proof */}
-            <div className="flex items-center space-x-3 bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 shadow-lg w-fit">
+            {/* Social Proof - Hidden on mobile */}
+            <div className="hidden sm:flex items-center justify-center lg:justify-start space-x-2 sm:space-x-3 bg-white/80 backdrop-blur-sm rounded-full px-4 sm:px-6 py-2 sm:py-3 shadow-lg w-fit mx-auto lg:mx-0">
               <div className="flex items-center space-x-1">
                 {[...Array(5)].map((_, i) => (
-                  <HiStar key={i} className="w-4 h-4 text-yellow-400" />
+                  <HiStar key={i} className="w-3 sm:w-4 h-3 sm:h-4 text-yellow-400" />
                 ))}
               </div>
-              <span className="text-gray-700 font-semibold text-sm">
+              <span className="text-gray-700 font-semibold text-xs sm:text-sm">
                 +1000 clientes satisfeitos
               </span>
             </div>
             
             {/* Main Headline */}
-            <div className="space-y-6">
-              <h1 className="text-5xl lg:text-7xl font-black leading-tight">
+            <div className="space-y-3 sm:space-y-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight">
                 <span className="text-gray-900">Salgadinhos</span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-500">
@@ -101,21 +101,24 @@ const Hero: React.FC = () => {
                 </span>
               </h1>
               
-              <p className="text-xl lg:text-2xl text-gray-700 font-medium">
+              <p className="text-base sm:text-xl lg:text-2xl text-gray-700 font-medium">
                 Fresquinhos, saborosos e irresistíveis
               </p>
             </div>
             
-            {/* Value Proposition */}
-            <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl p-6 shadow-xl">
-              <p className="text-xl font-bold mb-2">🔥 Combos variados para sua festa ou evento!</p>
-              <p className="text-lg opacity-90">
+            {/* Value Proposition - Simplified for mobile */}
+            <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl">
+              <p className="text-base sm:text-xl font-bold mb-1 sm:mb-2">🔥 Combos para sua festa!</p>
+              <p className="text-sm sm:text-lg opacity-90 hidden sm:block">
                 Entrega rápida no Bairro Urucânia e adjacências
+              </p>
+              <p className="text-sm opacity-90 sm:hidden">
+                Entrega em Urucânia
               </p>
             </div>
             
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
               
               <Button
                 size="xl"
