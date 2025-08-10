@@ -1,15 +1,13 @@
+
 [build]
   # Comando de build
   command = "npm run build"
-  
   # Diretório onde estão os arquivos buildados
   publish = "dist"
-  
-  # Versão do Node.js
-  environment = { NODE_VERSION = "18" }
 
 [build.environment]
   # Configurações de ambiente para otimização
+  NODE_VERSION = "18"
   NODE_ENV = "production"
   CI = "true"
 
