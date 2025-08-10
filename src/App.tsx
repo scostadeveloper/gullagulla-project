@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import ComboCard from './components/ComboCard';
-import ProductCard from './components/ProductCard';
+import MenuItemCard from './components/MenuItemCard';
 import CategoryTabs from './components/CategoryTabs';
 import TestimonialsSection from './components/TestimonialsSection';
 import StoreMap from './components/StoreMap';
@@ -136,16 +135,16 @@ function App() {
             </div>
 
             {/* Grid de Itens Filtrados */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 auto-rows-fr">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 auto-rows-fr">
               {filteredItems.combos
                 .sort((a, b) => a.price - b.price)
                 .map((item) => (
-                  <ComboCard key={item.id} combo={item} />
+                  <MenuItemCard key={item.id} item={item} type="combo" />
                 ))}
               {filteredItems.products
                 .sort((a, b) => a.price - b.price)
                 .map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <MenuItemCard key={product.id} item={product} type="product" />
                 ))}
             </div>
           </div>
