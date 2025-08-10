@@ -21,15 +21,16 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/digitalfusion/gullagulla-react.git"
+    "url": "https://github.com/scostadeveloper/gullagulla-project.git"
   },
   "bugs": {
-    "url": "https://github.com/digitalfusion/gullagulla-react/issues"
+    "url": "https://github.com/scostadeveloper/gullagulla-project/issues"
   },
-  "homepage": "https://gullagulla.com.br",
+  "homepage": "https://gullagulla.vercel.app",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "vercel-build": "npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
