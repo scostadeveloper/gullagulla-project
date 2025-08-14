@@ -477,6 +477,10 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
                             pattern="[0-9]*"
                             value={item.quantity}
                             onFocus={(e) => {
+                              // Se o valor atual for 0, limpa o campo para facilitar a digitação
+                              if (item.quantity === 0) {
+                                e.target.value = '';
+                              }
                               // Scrolla o input para o centro da área de rolagem
                               setTimeout(() => {
                                 e.target.scrollIntoView({
