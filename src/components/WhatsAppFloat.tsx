@@ -13,6 +13,8 @@ const WhatsAppFloat: React.FC = () => {
       onClick={handleClick}
       className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-green-500 border-green-500 text-white rounded-full shadow-2xl z-50 animate-bounce hover:animate-none transition-all duration-300 transform hover:scale-110 hover:bg-green-600 tap-target"
       title="Pedir pelo WhatsApp"
+      aria-label="Fazer pedido pelo WhatsApp"
+      role="button"
     >
       <svg 
         width="20" 

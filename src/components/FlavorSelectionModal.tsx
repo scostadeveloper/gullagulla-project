@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HiMinus, HiPlus, HiXMark } from 'react-icons/hi2';
 import type { Combo, FlavorQuantity } from '../types';
+import { useBackButton } from '../hooks/useBackButton';
 
 interface FlavorSelectionModalProps {
   isOpen: boolean;
@@ -16,34 +17,62 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
   onConfirm,
 }) => {
   const [flavorQuantities, setFlavorQuantities] = useState<FlavorQuantity[]>([]);
+  
+  // Hook para controlar o botão voltar no mobile (prioridade 4 - maior que checkout)
+  useBackButton(isOpen, onClose, 4);
 
   // Parse quantities from combo
   const parseComboQuantities = (combo: Combo) => {
     const quantities: FlavorQuantity[] = [];
     
-    // Extract quantities from combo name/description
-    const extractQuantity = (text: string, category: string) => {
-      const patterns = [
-        { regex: /(\d+)\s*salgad/i, category: 'salgados' },
-        { regex: /(\d+)\s*past[éeê]/i, category: 'pastéis' },
-        { regex: /(\d+)\s*churros/i, category: 'churros' },
-      ];
-      
-      for (const pattern of patterns) {
-        if (pattern.category === category) {
-          const match = text.match(pattern.regex);
+    // Mapeamento específico de combos com suas quantidades corretas
+    const comboQuantities: { [key: string]: { [category: string]: number } } = {
+      'salgados-pasteis-churros-refri': { salgados: 30, pastéis: 10, churros: 20, refrigerante: 1 },
+      '100-salgadinhos': { salgados: 100 },
+      '50-salgadinhos': { salgados: 50 },
+      '50-mini-churros': { churros: 50 },
+      '20-mini-pasteis': { pastéis: 20 },
+      '50-salgadinhos-10-pasteis': { salgados: 50, pastéis: 10 },
+      '60-salgados-refri': { salgados: 60, refrigerante: 1 },
+      '100-salgados-refri': { salgados: 100, refrigerante: 1 },
+      '50-salgadinhos-15-pasteis-30-churros': { salgados: 50, pastéis: 15, churros: 30 },
+      '50-salgadinhos-20-pasteis-refri': { salgados: 50, pastéis: 20, refrigerante: 1 },
+      '120-salgados-refri': { salgados: 120, refrigerante: 1 },
+      'mega-100-salgados-20-pasteis-50-churros-coca2l': { salgados: 100, pastéis: 20, churros: 50, refrigerante: 1 },
+      '250-salgados-coca2l': { salgados: 250, refrigerante: 1 },
+      '50-pasteis-refri': { pastéis: 50, refrigerante: 1 }
+    };
+
+    // Obter quantidades específicas do combo
+    const comboQty = comboQuantities[combo.id] || {};
+
+    // Fallback: extrair quantidades do nome/descrição se não estiver no mapeamento
+    if (Object.keys(comboQty).length === 0) {
+      const extractQuantity = (text: string, patterns: RegExp[]) => {
+        for (const pattern of patterns) {
+          const match = text.match(pattern);
           if (match) {
             return parseInt(match[1]);
           }
         }
-      }
-      return 0;
-    };
+        return 0;
+      };
 
-    const comboText = `${combo.name} ${combo.description}`;
-    const salgadosQty = extractQuantity(comboText, 'salgados');
-    const pasteisQty = extractQuantity(comboText, 'pastéis');
-    const churrosQty = extractQuantity(comboText, 'churros');
+      const comboText = `${combo.name} ${combo.description}`.toLowerCase();
+      
+      const salgadosPatterns = [/(\d+)\s*salgad/i, /(\d+)\s*salgad/i];
+      const pasteisPatterns = [/(\d+)\s*past[éeê]/i, /(\d+)\s*mini\s*past/i];
+      const churrosPatterns = [/(\d+)\s*churros/i, /(\d+)\s*mini\s*churros/i];
+      
+      comboQty.salgados = extractQuantity(comboText, salgadosPatterns);
+      comboQty.pastéis = extractQuantity(comboText, pasteisPatterns);
+      comboQty.churros = extractQuantity(comboText, churrosPatterns);
+      
+      // Se tem refrigerante no nome/descrição
+      if (comboText.includes('refrigerante') || comboText.includes('coca') || comboText.includes('guaraná')) {
+        comboQty.refrigerante = 1;
+      }
+    }
 
     // Create flavor quantities based on available flavors
     combo.flavors?.forEach(flavor => {
@@ -54,27 +83,27 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
 
       if (flavor.startsWith('Salgados:')) {
         category = 'salgados';
-        maxQuantity = salgadosQty;
+        maxQuantity = comboQty.salgados || 0;
       } else if (flavor.startsWith('Pastéis:')) {
         category = 'pastéis';
-        maxQuantity = pasteisQty;
+        maxQuantity = comboQty.pastéis || 0;
       } else if (flavor.startsWith('Churros:')) {
         category = 'churros';
-        maxQuantity = churrosQty;
+        maxQuantity = comboQty.churros || 0;
       } else if (flavor.startsWith('Refrigerante:')) {
         category = 'refrigerante';
-        maxQuantity = 1; // Only one drink per combo
+        maxQuantity = comboQty.refrigerante || 0;
       } else {
-        // For simple items like "50 Mini Churros"
-        if (combo.name.includes('Churros')) {
+        // Para itens simples sem prefixo de categoria
+        if (combo.name.toLowerCase().includes('churros')) {
           category = 'churros';
-          maxQuantity = extractQuantity(combo.name, 'churros') || 50;
-        } else if (combo.name.includes('Salgad')) {
+          maxQuantity = comboQty.churros || 50;
+        } else if (combo.name.toLowerCase().includes('salgad')) {
           category = 'salgados';
-          maxQuantity = extractQuantity(combo.name, 'salgados') || 50;
-        } else if (combo.name.includes('Past')) {
+          maxQuantity = comboQty.salgados || 50;
+        } else if (combo.name.toLowerCase().includes('past')) {
           category = 'pastéis';
-          maxQuantity = extractQuantity(combo.name, 'pastéis') || 50;
+          maxQuantity = comboQty.pastéis || 20;
         }
       }
 
@@ -102,21 +131,32 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
       const updated = [...prev];
       const item = updated[index];
       
-      // Calculate total for this category
+      // Não permitir valores negativos
+      if (newQuantity < 0) return prev;
+      
+      // Calculate total for this category (excluding current item)
       const categoryTotal = updated
-        .filter(f => f.category === item.category && updated.indexOf(f) !== index)
+        .filter((f, i) => f.category === item.category && i !== index)
         .reduce((sum, f) => sum + f.quantity, 0);
       
-      // Get max quantity for this category
+      // Get max quantity for this category (should be the same for all items in category)
       const maxForCategory = updated
         .filter(f => f.category === item.category)
         .reduce((max, f) => Math.max(max, f.maxQuantity), 0);
       
-      // Ensure we don't exceed category limit
+      // Calculate how much we can still add to this category
       const availableQuantity = maxForCategory - categoryTotal;
-      const finalQuantity = Math.min(Math.max(0, newQuantity), Math.min(availableQuantity, item.maxQuantity));
       
-      updated[index].quantity = finalQuantity;
+      // The final quantity cannot exceed:
+      // 1. The available quantity for the category
+      // 2. The individual item's max quantity (which should be same as category max)
+      const finalQuantity = Math.min(newQuantity, availableQuantity);
+      
+      // Only update if the quantity is valid
+      if (finalQuantity >= 0) {
+        updated[index].quantity = finalQuantity;
+      }
+      
       return updated;
     });
   };
@@ -138,6 +178,30 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
     
     if (selectedFlavors.length === 0) {
       alert('Por favor, selecione pelo menos um sabor!');
+      return;
+    }
+    
+    // Verificar se todas as categorias obrigatórias foram preenchidas corretamente
+    const categories = [...new Set(flavorQuantities.map(f => f.category))];
+    const incompleteCategories: string[] = [];
+    
+    categories.forEach(category => {
+      const total = getTotalByCategory(category);
+      const max = getMaxByCategory(category);
+      
+      if (total !== max && max > 0) {
+        const categoryNames: { [key: string]: string } = {
+          'salgados': 'Salgados',
+          'pastéis': 'Pastéis', 
+          'churros': 'Churros',
+          'refrigerante': 'Refrigerante'
+        };
+        incompleteCategories.push(categoryNames[category] || category);
+      }
+    });
+    
+    if (incompleteCategories.length > 0) {
+      alert(`Por favor, complete a seleção para: ${incompleteCategories.join(', ')}. Você deve selecionar a quantidade exata de cada categoria.`);
       return;
     }
     
@@ -226,14 +290,41 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
                   <h4 className="text-lg font-semibold text-gray-800 capitalize">
                     {categoryNames[category] || category}
                   </h4>
-                  <div className="text-sm">
-                    <span className={`font-medium ${total === max ? 'text-green-600' : 'text-orange-600'}`}>
-                      {total}
-                    </span>
-                    <span className="text-gray-500">
-                      /{max}
-                    </span>
+                  <div className="flex items-center space-x-2">
+                    <div className="text-sm">
+                      <span className={`font-medium ${total === max ? 'text-green-600' : total > max ? 'text-red-600' : 'text-orange-600'}`}>
+                        {total}
+                      </span>
+                      <span className="text-gray-500">
+                        /{max}
+                      </span>
+                    </div>
+                    {total === max && (
+                      <span className="text-green-600 text-sm">✓</span>
+                    )}
+                    {total > max && (
+                      <span className="text-red-600 text-sm">⚠️</span>
+                    )}
                   </div>
+                </div>
+                
+                {/* Barra de progresso */}
+                <div className="mb-4">
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        total === max ? 'bg-green-500' : 
+                        total > max ? 'bg-red-500' : 
+                        'bg-orange-500'
+                      }`}
+                      style={{ width: `${Math.min((total / max) * 100, 100)}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {total === max ? 'Seleção completa!' : 
+                     total > max ? 'Quantidade excedida!' : 
+                     `Selecione mais ${max - total} ${max - total === 1 ? 'item' : 'itens'}`}
+                  </p>
                 </div>
                 
                 <div className="grid gap-3">
@@ -302,6 +393,38 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
         </div>
 
         <div className="border-t bg-gray-50 p-4 sm:p-6">
+          {/* Resumo da seleção */}
+          <div className="mb-4 p-3 bg-white rounded-lg border">
+            <h5 className="font-medium text-gray-800 mb-2">Resumo da seleção:</h5>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              {categories.map(category => {
+                const total = getTotalByCategory(category);
+                const max = getMaxByCategory(category);
+                const categoryNames: { [key: string]: string } = {
+                  'salgados': 'Salgados',
+                  'pastéis': 'Pastéis', 
+                  'churros': 'Churros',
+                  'refrigerante': 'Refrigerante'
+                };
+                
+                return (
+                  <div key={category} className="flex justify-between items-center">
+                    <span className="text-gray-600">{categoryNames[category] || category}:</span>
+                    <span className={`font-medium ${
+                      total === max ? 'text-green-600' : 
+                      total > max ? 'text-red-600' : 
+                      'text-orange-600'
+                    }`}>
+                      {total}/{max}
+                      {total === max && ' ✓'}
+                      {total > max && ' ⚠️'}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          
           <div className="flex space-x-4">
             <button
               onClick={handleClose}
@@ -311,10 +434,18 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
             </button>
             <button
               onClick={handleConfirm}
-              disabled={flavorQuantities.every(f => f.quantity === 0)}
+              disabled={flavorQuantities.every(f => f.quantity === 0) || categories.some(category => {
+                const total = getTotalByCategory(category);
+                const max = getMaxByCategory(category);
+                return total !== max;
+              })}
               className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all font-medium shadow-lg"
             >
-              Adicionar ao Carrinho
+              {categories.every(category => {
+                const total = getTotalByCategory(category);
+                const max = getMaxByCategory(category);
+                return total === max;
+              }) ? 'Adicionar ao Carrinho ✓' : 'Complete a seleção'}
             </button>
           </div>
         </div>

@@ -46,20 +46,25 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
             <button
               key={category}
               onClick={() => onCategoryChange(category)}
-              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border transition-all duration-200 text-xs sm:text-sm font-medium uppercase tracking-wide min-w-[80px] sm:min-w-[90px] justify-center
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-3 sm:py-2.5 rounded-full border transition-all duration-200 text-xs sm:text-sm font-medium uppercase tracking-wide min-w-[80px] sm:min-w-[90px] min-h-[44px] justify-center touch-manipulation
                 ${isActive
                   ? 'bg-gradient-to-r from-orange-100 to-orange-300 border-orange-400 text-orange-700 shadow-md scale-105'
                   : 'bg-white/80 border-gray-200 text-gray-700 hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600 hover:scale-102'}
               `}
+              aria-pressed={isActive}
+              aria-label={`Filtrar por categoria: ${category}`}
+              type="button"
             >
-              <img 
-                src={getPngIcon(category)} 
-                alt={category + ' ícone'} 
-                className={`w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 object-contain ${isActive ? 'scale-110' : 'opacity-80 group-hover:opacity-100'} transition-all duration-200`} 
+              <img
+                src={getPngIcon(category)}
+                alt={`${category} icon`}
+                className={`w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 object-contain ${isActive ? 'scale-110' : 'opacity-80 group-hover:opacity-100'} transition-all duration-200`}
                 draggable={false}
+                loading="lazy"
+                decoding="async"
               />
-              <span className="hidden xs:inline sm:inline">{category}</span>
-              <span className="xs:hidden sm:hidden text-[10px]">{category.slice(0, 4)}</span>
+              <span className="hidden sm:inline">{category}</span>
+            <span className="sm:hidden text-[10px]">{category.slice(0, 4)}</span>
             </button>
           );
         })}

@@ -3,6 +3,7 @@ import { Button } from 'flowbite-react';
 import { HiShoppingCart, HiXMark, HiPlus, HiMinus, HiTrash } from 'react-icons/hi2';
 import { useCart } from '../contexts/CartContext';
 import CheckoutModal from './CheckoutModal';
+import { useBackButton } from '../hooks/useBackButton';
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -12,6 +13,9 @@ interface CartSidebarProps {
 const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const { items, total, updateQuantity, removeItem, getShippingCost, getGrandTotal } = useCart();
+  
+  // Hook para controlar o botão voltar no mobile (prioridade 2 - maior que FAQ)
+  useBackButton(isOpen, onClose, 2);
 
   const formatPrice = (price: number) => {
     return `R$ ${price.toFixed(2).replace('.', ',')}`;
@@ -27,7 +31,9 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
             <h2 className="text-xl font-bold">Seu Carrinho</h2>
             <Button
               onClick={onClose}
-              className="p-2 bg-transparent hover:bg-white/20 border-0"
+              className="p-2 bg-transparent hover:bg-white/20 border-0 min-h-[44px] min-w-[44px] touch-manipulation"
+              aria-label="Fechar carrinho"
+              type="button"
             >
               <HiXMark className="w-5 h-5" />
             </Button>
@@ -50,6 +56,8 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
                         src={item.image}
                         alt={item.name}
                         className="w-16 h-16 object-cover rounded-lg"
+                        loading="lazy"
+                        decoding="async"
                       />
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-800 text-sm">{item.name}</h3>
@@ -75,22 +83,28 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
                             <Button
                               size="xs"
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="p-1 bg-gray-200 hover:bg-gray-300 text-gray-700 border-0"
+                              className="p-2 bg-gray-200 hover:bg-gray-300 text-gray-700 border-0 min-h-[44px] min-w-[44px] touch-manipulation"
+                              aria-label={`Diminuir quantidade de ${item.name}`}
+                              type="button"
                             >
                               <HiMinus className="w-3 h-3" />
                             </Button>
-                            <span className="w-8 text-center text-sm font-semibold">{item.quantity}</span>
+                            <span className="w-8 text-center text-sm font-semibold" aria-label={`Quantidade: ${item.quantity}`}>{item.quantity}</span>
                             <Button
                               size="xs"
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="p-1 bg-orange-500 hover:bg-orange-600 text-white border-0"
+                              className="p-2 bg-orange-500 hover:bg-orange-600 text-white border-0 min-h-[44px] min-w-[44px] touch-manipulation"
+                              aria-label={`Aumentar quantidade de ${item.name}`}
+                              type="button"
                             >
                               <HiPlus className="w-3 h-3" />
                             </Button>
                             <Button
                               size="xs"
                               onClick={() => removeItem(item.id)}
-                              className="p-1 bg-red-500 hover:bg-red-600 text-white border-0 ml-2"
+                              className="p-2 bg-red-500 hover:bg-red-600 text-white border-0 ml-2 min-h-[44px] min-w-[44px] touch-manipulation"
+                              aria-label={`Remover ${item.name} do carrinho`}
+                              type="button"
                             >
                               <HiTrash className="w-3 h-3" />
                             </Button>
@@ -135,7 +149,9 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose }) => {
                   onClose();
                   setIsCheckoutOpen(true);
                 }}
-                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 rounded-lg border-0"
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 rounded-lg border-0 min-h-[44px] touch-manipulation"
+                aria-label="Finalizar pedido e ir para checkout"
+                type="button"
               >
                 FINALIZAR PEDIDO
               </Button>

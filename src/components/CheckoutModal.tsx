@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { HiCreditCard, HiClipboard, HiCheck } from 'react-icons/hi2';
 import { useCart } from '../contexts/CartContext';
 import type { CustomerInfo, Order } from '../types';
+import { useBackButton } from '../hooks/useBackButton';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -10,6 +11,9 @@ interface CheckoutModalProps {
 
 const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
   const { items, total, getShippingCost, getGrandTotal, clearCart } = useCart();
+  
+  // Hook para controlar o botão voltar no mobile (prioridade 3 - maior que carrinho)
+  useBackButton(isOpen, onClose, 3);
   const [step, setStep] = useState<'info' | 'payment' | 'pix' | 'success'>('info');
   const [paymentMethod, setPaymentMethod] = useState<'pix' | 'delivery' | 'credit' | 'debit' | 'pickup'>('pix');
   const [loading, setLoading] = useState(false);

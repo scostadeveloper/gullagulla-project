@@ -140,6 +140,8 @@ const Hero: React.FC = () => {
                 src={carouselItems[currentSlide].image}
                 alt={carouselItems[currentSlide].name}
                 className="w-full h-auto rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-700"
+                loading="lazy"
+                decoding="async"
               />
               
               {/* Simple price tag */}

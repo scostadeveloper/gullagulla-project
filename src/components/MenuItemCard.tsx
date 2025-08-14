@@ -78,6 +78,8 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, type }) => {
             src={getImageSrc()}
             alt={item.name}
             className="w-full h-full object-contain"
+            loading="lazy"
+            decoding="async"
           />
           {/* Badge de preço */}
           <div className="absolute bottom-2 right-2 bg-orange-500 text-white px-2 py-1 rounded-lg font-bold text-sm shadow-lg">
@@ -97,7 +99,9 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, type }) => {
           {/* Botão de adicionar - sempre no final */}
           <button
             onClick={handleAddToCart}
-            className="w-full mt-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm transition-all duration-200 hover:shadow-md active:scale-95"
+            className="w-full mt-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 px-4 rounded-lg text-sm transition-all duration-200 hover:shadow-md active:scale-95 min-h-[44px] touch-manipulation"
+            aria-label={`Adicionar ${item.name} ao carrinho`}
+            type="button"
           >
             <span className="hidden sm:inline">Adicionar</span>
             <span className="sm:hidden">+</span>

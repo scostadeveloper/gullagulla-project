@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import type { FAQ } from '../types';
+import { useBackButton } from '../hooks/useBackButton';
 
 interface FAQModalProps {
   isOpen: boolean;
@@ -8,6 +9,9 @@ interface FAQModalProps {
 }
 
 const FAQModal: React.FC<FAQModalProps> = ({ isOpen, onClose, faqs }) => {
+  // Hook para controlar o botão voltar no mobile
+  useBackButton(isOpen, onClose, 1);
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {

@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import MenuItemCard from './components/MenuItemCard';
 import CategoryTabs from './components/CategoryTabs';
-import TestimonialsSection from './components/TestimonialsSection';
-import StoreMap from './components/StoreMap';
-import FAQModal from './components/FAQModal';
-import WhatsAppFloat from './components/WhatsAppFloat';
-import CartSidebar from './components/CartSidebar';
-import Footer from './components/Footer';
 import { CartProvider } from './contexts/CartContext';
 import { menuData } from './data/menuData';
+
+// Lazy loading para componentes menos críticos
+const TestimonialsSection = lazy(() => import('./components/TestimonialsSection'));
+const StoreMap = lazy(() => import('./components/StoreMap'));
+const FAQModal = lazy(() => import('./components/FAQModal'));
+const WhatsAppFloat = lazy(() => import('./components/WhatsAppFloat'));
+const CartSidebar = lazy(() => import('./components/CartSidebar'));
+const Footer = lazy(() => import('./components/Footer'));
 
 
 function App() {
@@ -186,7 +188,9 @@ function App() {
           </div>
         </section>
 
-        <TestimonialsSection />
+        <Suspense fallback={<div className="py-20 flex justify-center items-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div></div>}>
+          <TestimonialsSection />
+        </Suspense>
 
         {/* SESSÃO: Localização da Loja */}
         <section id="localizacao" className="py-20 bg-gray-50">
@@ -201,21 +205,31 @@ function App() {
             </div>
             
             <div className="max-w-4xl mx-auto">
-              <StoreMap />
+              <Suspense fallback={<div className="py-8 flex justify-center items-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div></div>}>
+                <StoreMap />
+              </Suspense>
             </div>
           </div>
         </section>
       </main>
       
-      <Footer onOpenFAQ={handleOpenFAQ} />
-      <WhatsAppFloat />
+      <Suspense fallback={<div></div>}>
+        <Footer onOpenFAQ={handleOpenFAQ} />
+      </Suspense>
+      <Suspense fallback={<div></div>}>
+        <WhatsAppFloat />
+      </Suspense>
       
-      <FAQModal 
-        isOpen={isFAQOpen}
-        onClose={handleCloseFAQ}
-        faqs={menuData.faqs}
-      />
-      <CartSidebar isOpen={isCartOpen} onClose={handleCloseCart} />
+      <Suspense fallback={<div></div>}>
+        <FAQModal 
+          isOpen={isFAQOpen}
+          onClose={handleCloseFAQ}
+          faqs={menuData.faqs}
+        />
+      </Suspense>
+      <Suspense fallback={<div></div>}>
+        <CartSidebar isOpen={isCartOpen} onClose={handleCloseCart} />
+      </Suspense>
     </div>
     </CartProvider>
   );

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { HiMapPin, HiPhone, HiClock } from 'react-icons/hi2';
 
 interface FooterProps {
@@ -61,7 +61,7 @@ const Footer: React.FC<FooterProps> = ({ onOpenFAQ }) => {
               </div>
               
               {/* Loja 2 - Hidden on small mobile, simplified on larger */}
-              <div className="hidden xs:block">
+              <div className="hidden sm:block">
                 <h5 className="font-semibold text-orange-400 mb-1 sm:mb-2 text-sm sm:text-base">
                   <span className="sm:hidden">Loja 2</span>
                   <span className="hidden sm:inline">Loja 2 - José Piauhy Dourado</span>

@@ -35,12 +35,14 @@ const Header: React.FC<HeaderProps> = ({ onOpenCart }) => {
               <a 
                 href="#combos" 
                 className="text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200"
+                aria-label="Ir para seção de combos"
               >
                 Combos
               </a>
               <a 
                 href="#localizacao" 
                 className="text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200"
+                aria-label="Ir para seção de localização"
               >
                 Localização
               </a>
@@ -50,11 +52,13 @@ const Header: React.FC<HeaderProps> = ({ onOpenCart }) => {
           <div className="flex items-center space-x-2 sm:space-x-4">
             <Button
               onClick={onOpenCart}
-              className="relative bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-bold transition-all duration-300 hover:shadow-xl hover:-translate-y-1 shadow-lg border-0 text-xs sm:text-sm"
+              className="relative bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-full font-bold transition-all duration-300 hover:shadow-xl hover:-translate-y-1 shadow-lg border-0 text-xs sm:text-sm min-h-[44px] touch-manipulation"
               size="sm"
+              aria-label={`Abrir carrinho de compras${itemCount > 0 ? ` (${itemCount} ${itemCount === 1 ? 'item' : 'itens'})` : ''}`}
+              type="button"
             >
               <HiShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-              <span className="hidden xs:inline">CARRINHO</span>
+              <span className="hidden sm:inline">CARRINHO</span>
               {itemCount > 0 && (
                 <Badge
                   color="failure"
