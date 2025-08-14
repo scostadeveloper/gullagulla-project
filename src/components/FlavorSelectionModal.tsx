@@ -502,6 +502,13 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
                               );
                               updateQuantity(globalIndex, val);
                             }}
+                            onKeyDown={(e) => {
+                              // Ao pressionar Enter ou "Ir", remove o foco do campo para fechar o teclado
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                e.currentTarget.blur();
+                              }
+                            }}
                             className="w-12 text-center font-semibold text-lg text-black bg-transparent border-none focus:ring-2 focus:ring-orange-300 focus:outline-none appearance-none"
                             aria-label={`Quantidade de ${item.flavor}`}
                           />
