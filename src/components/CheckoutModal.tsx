@@ -28,7 +28,8 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     name: "",
     phone: "",
-    email: "",
+    // email removed per UX request
+    email: undefined,
     shipping: {
       cep: "",
       address: "",
@@ -284,7 +285,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
     setCustomerInfo({
       name: "",
       phone: "",
-      email: "",
+      email: undefined,
       shipping: {
         cep: "",
         address: "",
@@ -363,24 +364,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                     </div>
                   </div>
 
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      E-mail
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={customerInfo.email}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleCustomerInfoChange("email", e.target.value)
-                      }
-                      placeholder="seu@email.com"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
-                    />
-                  </div>
+                  {/* email field intentionally removed */}
 
                   <div className="grid grid-cols-3 gap-4">
                     <div>

@@ -19,6 +19,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const incoming = req.body || {};
+  // debug log incoming payload (trim large fields if necessary)
+  console.log('meta-conversion incoming event count:', Array.isArray(incoming.data) ? incoming.data.length : 0);
 
   // captura user agent e ip do cliente para melhorar atribuição
   const client_user_agent = req.headers["user-agent"] || "";
@@ -43,7 +45,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const response = await fetch(
+  console.log('meta-conversion outgoing payload prepared');
+  const response = await fetch(
       `https://graph.facebook.com/v17.0/${pixelId}/events?access_token=${accessToken}`,
       {
         method: "POST",

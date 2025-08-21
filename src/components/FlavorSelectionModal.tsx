@@ -342,24 +342,7 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
           ref={scrollRef}
           className="p-4 sm:p-6 flex-1 min-h-0 overflow-y-auto max-h-[55dvh] sm:max-h-[calc(70vh-200px)] relative"
         >
-          {/* Seta para baixo indicando mais conteúdo */}
-          {showArrow && (
-            <div
-              className="fixed left-1/2 -translate-x-1/2"
-              style={{
-                bottom: "calc(env(safe-area-inset-bottom, 0px) + 84px)", // altura do rodapé/modal actions
-                zIndex: 30,
-                pointerEvents: "none",
-              }}
-            >
-              <div
-                className="rounded-full flex items-center justify-center"
-                style={{ width: 38, height: 38 }}
-              >
-                <DownArrow />
-              </div>
-            </div>
-          )}
+          {/* Seta para baixo indicando mais conteúdo (posicionada acima do rodapé) - renderizada abaixo do conteúdo, antes do footer */}
           <div className="mb-6">
             <h3 className="font-bold text-xl text-gray-800 mb-2">
               {combo.name}
@@ -479,7 +462,7 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
                             onFocus={(e) => {
                               // Se o valor atual for 0, limpa o campo para facilitar a digitação
                               if (item.quantity === 0) {
-                                e.target.value = '';
+                                e.target.value = "";
                               }
                               // Scrolla o input para o centro da área de rolagem
                               setTimeout(() => {
@@ -504,7 +487,7 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
                             }}
                             onKeyDown={(e) => {
                               // Ao pressionar Enter ou "Ir", remove o foco do campo para fechar o teclado
-                              if (e.key === 'Enter') {
+                              if (e.key === "Enter") {
                                 e.preventDefault();
                                 e.currentTarget.blur();
                               }
@@ -551,6 +534,17 @@ const FlavorSelectionModal: React.FC<FlavorSelectionModalProps> = ({
         </div>
 
         <div className="border-t bg-gray-50 p-4 sm:p-6 sticky bottom-0 left-0 right-0 z-10">
+          {/* Setinha centralizada acima do resumo (visível quando houver overflow) */}
+          {showArrow && (
+            <div className="w-full flex justify-center mb-2 pointer-events-none">
+              <div
+                className="rounded-full bg-transparent flex items-center justify-center"
+                style={{ width: 38, height: 38 }}
+              >
+                <DownArrow />
+              </div>
+            </div>
+          )}
           {/* Resumo da seleção */}
           <div className="mb-4 p-3 bg-white rounded-lg border">
             <h5 className="font-medium text-gray-800 mb-2">

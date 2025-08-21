@@ -4,6 +4,7 @@ import type { Product, Combo, FlavorQuantity } from '../types';
 import { formatPrice } from '../data/menuData';
 import { useCart } from '../contexts/CartContext';
 import FlavorSelectionModal from './FlavorSelectionModal';
+import { trackMetaEvent } from '../lib/metaPixel';
 
 interface MenuItemCardProps {
   item: Product | Combo;
@@ -20,8 +21,11 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, type }) => {
 
   const handleAddToCart = () => {
     if (isCombo && combo?.requiresFlavors && combo?.flavors) {
+  // Track that user viewed the combo (will open flavor modal)
+  try { trackMetaEvent('ViewContent', { content_ids: [combo.id], content_name: combo.name, content_type: 'combo' }); } catch (e) {}
       setIsFlavorModalOpen(true);
     } else {
+  try { trackMetaEvent('ViewContent', { content_ids: [item.id], content_name: item.name, content_type: type }); } catch (e) {}
       addItem(item, type);
     }
   };
@@ -32,6 +36,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, type }) => {
       const flavorStrings = selectedFlavors.map(f => 
         `${f.quantity}x ${f.flavor}`
       );
+  try { trackMetaEvent('AddToCart', { content_ids: [combo.id], content_name: combo.name, content_type: 'combo', selected_flavors: flavorStrings, value: combo.price, currency: 'BRL' }); } catch (e) {}
       addItem(combo, 'combo', flavorStrings);
     }
   };

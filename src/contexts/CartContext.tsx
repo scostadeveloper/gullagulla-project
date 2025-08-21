@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useRef } from 'react';
+import { trackMetaEvent, sendServerEvent } from '../lib/metaPixel';
 import type { CartItem, Combo, Product } from '../types';
 
 interface CartState {
@@ -130,19 +131,107 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addItem = (item: Combo | Product, type: 'combo' | 'product', selectedFlavors?: string[]) => {
     dispatch({ type: 'ADD_ITEM', payload: { item, itemType: type, selectedFlavors } });
+    try {
+      trackMetaEvent('AddToCart', {
+        content_ids: [item.id],
+        content_type: type,
+        content_name: item.name,
+        content_category: (item as any).category || null,
+        selected_flavors: selectedFlavors || [],
+        value: item.price,
+        currency: 'BRL',
+      });
+      // Also send a server-side event (helps with attribution)
+      void sendServerEvent({
+        data: [{ event_name: 'AddToCart', event_time: Math.floor(Date.now() / 1000), action_source: 'website', user_data: {}, custom_data: { value: item.price, currency: 'BRL', content_ids: [item.id], content_name: item.name, selected_flavors: selectedFlavors || [] } }]
+      });
+    } catch (err) {
+      // noop
+    }
   };
 
   const removeItem = (id: string) => {
+    const removed = state.items.find(i => i.id === id);
     dispatch({ type: 'REMOVE_ITEM', payload: id });
+    try {
+      if (removed) {
+        trackMetaEvent('RemoveFromCart', {
+          content_ids: [removed.id],
+          content_type: removed.type,
+          content_name: removed.name,
+          selected_flavors: removed.selectedFlavors || [],
+          value: removed.price,
+          currency: 'BRL',
+        });
+        void sendServerEvent({
+          data: [{ event_name: 'RemoveFromCart', event_time: Math.floor(Date.now() / 1000), action_source: 'website', user_data: {}, custom_data: { value: removed.price, currency: 'BRL', content_ids: [removed.id], content_name: removed.name, selected_flavors: removed.selectedFlavors || [] } }]
+        });
+      }
+    } catch (err) {}
   };
 
   const updateQuantity = (id: string, quantity: number) => {
+    const item = state.items.find(i => i.id === id);
     dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
+    try {
+      if (item) {
+        trackMetaEvent('UpdateCart', {
+          content_ids: [item.id],
+          content_type: item.type,
+          content_name: item.name,
+          selected_flavors: item.selectedFlavors || [],
+          value: item.price,
+          quantity,
+          currency: 'BRL',
+        });
+        void sendServerEvent({
+          data: [{ event_name: 'UpdateCart', event_time: Math.floor(Date.now() / 1000), action_source: 'website', user_data: {}, custom_data: { value: item.price, quantity, currency: 'BRL', content_ids: [item.id], content_name: item.name } }]
+        });
+      }
+    } catch (err) {}
   };
 
   const clearCart = () => {
+    // send an event that cart was cleared by user
+    try {
+      if (state.items.length > 0) {
+        trackMetaEvent('RemoveFromCart', { content_ids: state.items.map(i => i.id), value: state.total, currency: 'BRL' });
+        void sendServerEvent({ data: [{ event_name: 'ClearCart', event_time: Math.floor(Date.now() / 1000), action_source: 'website', custom_data: { value: state.total, currency: 'BRL' } }] });
+      }
+    } catch (err) {}
     dispatch({ type: 'CLEAR_CART' });
   };
+
+  // Cart abandonment detection: send CartAbandon when page unloads or visibility change and cart has items
+  const abandonmentRef = useRef(false);
+  useEffect(() => {
+    const handler = () => {
+      try {
+        if (state.items.length > 0 && !abandonmentRef.current) {
+          abandonmentRef.current = true;
+          const payload = { data: [{ event_name: 'CartAbandon', event_time: Math.floor(Date.now() / 1000), action_source: 'website', custom_data: { value: state.total, currency: 'BRL', items: state.items } }] };
+          if (navigator && typeof navigator.sendBeacon === 'function') {
+            const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+            navigator.sendBeacon('/api/meta-conversion', blob);
+          } else {
+            void fetch('/api/meta-conversion', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true });
+          }
+        }
+      } catch (err) {}
+    };
+
+    const visibilityHandler = () => {
+      if (document.visibilityState === 'hidden') handler();
+    };
+
+    window.addEventListener('beforeunload', handler);
+    document.addEventListener('visibilitychange', visibilityHandler);
+
+    return () => {
+      window.removeEventListener('beforeunload', handler);
+      document.removeEventListener('visibilitychange', visibilityHandler);
+    };
+  }, [state.items, state.total]);
 
   const getShippingCost = (deliveryType: 'delivery' | 'pickup' = 'delivery'): number => {
     // Retirada na loja é sempre grátis

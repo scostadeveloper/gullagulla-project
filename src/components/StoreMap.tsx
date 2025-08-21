@@ -112,14 +112,11 @@ const StoreMap: React.FC<StoreMapProps> = ({ className = "" }) => {
 
       {/* Mapa Embed */}
       <div className="relative h-80 bg-gradient-to-br from-orange-100 to-red-100">
+        {/* Use Google Maps embed by coordinates to ensure marker/centering accuracy */}
         <iframe
-          src={`https://www.openstreetmap.org/export/embed.html?bbox=${
-            currentStore.coordinates.lng - 0.01
-          },${currentStore.coordinates.lat - 0.01},${
-            currentStore.coordinates.lng + 0.01
-          },${currentStore.coordinates.lat + 0.01}&layer=mapnik&marker=${
-            currentStore.coordinates.lat
-          },${currentStore.coordinates.lng}`}
+          src={`https://www.google.com/maps?q=${encodeURIComponent(
+            `${currentStore.street}, ${currentStore.neighborhood}, ${currentStore.city} - ${currentStore.state} ${currentStore.zipCode}`
+          )}&z=17&output=embed`}
           className="w-full h-full border-0"
           title={`Localização ${currentStore.name}`}
           loading="lazy"
