@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { HiCreditCard, HiClipboard, HiCheck } from "react-icons/hi2";
 import { useCart } from "../contexts/CartContext";
 import type { CustomerInfo, Order } from "../types";
 import { useBackButton } from "../hooks/useBackButton";
+import { trackMetaEvent } from "../lib/metaPixel";
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -39,6 +40,74 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
   });
 
   const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
+  const metaSentRef = useRef(false);
+
+  // Hash SHA-256 em hex lowercase (Web Crypto)
+  const sha256Hex = async (value: string) => {
+    try {
+      const normalized = value.trim().toLowerCase();
+      const data = new TextEncoder().encode(normalized);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+    } catch (err) {
+      return "";
+    }
+  };
+
+  // Envia evento Purchase para Meta: client-side (fbq) e server-side (/api/meta-conversion)
+  const sendMetaPurchase = async (order: Order) => {
+    try {
+      // Client-side FB pixel (se presente)
+      try {
+        trackMetaEvent("Purchase", {
+          currency: "BRL",
+          value: String(order.grandTotal),
+        });
+      } catch (e) {
+        // noop
+      }
+
+      // Preparar dados hasheados para Conversion API
+      const emHash = order.customer.email
+        ? await sha256Hex(order.customer.email)
+        : undefined;
+      const phHash = order.customer.phone
+        ? await sha256Hex(order.customer.phone)
+        : undefined;
+
+      const payload = {
+        data: [
+          {
+            event_name: "Purchase",
+            event_time: Math.floor(Date.now() / 1000),
+            action_source: "website",
+            user_data: {
+              em: emHash ? [emHash] : [],
+              ph: phHash ? [phHash] : [],
+            },
+            custom_data: {
+              currency: "BRL",
+              value: String(order.grandTotal),
+            },
+            original_event_data: {
+              event_name: "Purchase",
+              event_time: Math.floor(Date.now() / 1000),
+            },
+          },
+        ],
+      };
+
+      // Envia para o endpoint serverless
+      await fetch("/api/meta-conversion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.error("Erro ao enviar evento Meta Conversion API", err);
+    }
+  };
 
   // Carregar dados salvos do localStorage quando o modal abrir
   useEffect(() => {
@@ -161,6 +230,15 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
       } else {
         // Ir para tela de sucesso
         setStep("success");
+        // envia evento Meta Purchase (client+server)
+        try {
+          if (!metaSentRef.current) {
+            metaSentRef.current = true;
+            void sendMetaPurchase(order);
+          }
+        } catch (e) {
+          // noop
+        }
         clearCart();
       }
     } catch (error) {
@@ -181,6 +259,12 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
   const handlePixPaymentComplete = () => {
     if (currentOrder) {
       setStep("success");
+      try {
+        if (!metaSentRef.current) {
+          metaSentRef.current = true;
+          void sendMetaPurchase(currentOrder);
+        }
+      } catch (e) {}
       clearCart();
     }
   };
